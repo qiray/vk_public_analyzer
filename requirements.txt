@@ -3,3 +3,4 @@ pymystem3
 numpy
 pillow
 wordcloud
+matplotlib

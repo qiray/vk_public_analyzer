@@ -1,5 +1,6 @@
 #!/bin/python3
 
+import random
 from collections import Counter
 from string import punctuation
 
@@ -33,10 +34,11 @@ def preprocess_text(text, russian_stopwords):
     return tokens
 
 def word_data_to_text(word_data):
-    result = ""
+    result = []
     for v in word_data:
-        result += (v[0] + " ") * v[1]
-    return result #TODO: randomize words
+        result.extend([v[0]] * v[1])
+    random.shuffle(result)
+    return ' '.join(result)
 
 if __name__ == '__main__':
     mystem = Mystem() #Create lemmatizer 
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     top_words = sorted_words_data[:50]
     print(top_words)
 
-    wordcloud = WordCloud(max_font_size=40).generate(word_data_to_text(top_words)) #TODO: white background
+    wordcloud = WordCloud(max_font_size=40, background_color="#FFFFFF").generate(word_data_to_text(top_words))
     image = wordcloud.to_image()
-    image.show()
+    image.save("wordcloud.png")
 
