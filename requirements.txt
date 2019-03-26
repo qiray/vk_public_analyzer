@@ -1,2 +1,5 @@
 nltk
 pymystem3
+numpy
+pillow
+wordcloud

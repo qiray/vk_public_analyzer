@@ -1,9 +1,11 @@
 #!/bin/python3
 
+from collections import Counter
+from string import punctuation
+
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
-from string import punctuation
-from collections import Counter
+from wordcloud import WordCloud
 
 import database
 
@@ -30,10 +32,22 @@ def preprocess_text(text, russian_stopwords):
         and token != " " and token.strip() not in punctuation]
     return tokens
 
+def word_data_to_text(word_data):
+    result = ""
+    for v in word_data:
+        result += (v[0] + " ") * v[1]
+    return result #TODO: randomize words
+
 if __name__ == '__main__':
     mystem = Mystem() #Create lemmatizer 
     russian_stopwords = stopwords.words("russian") #init stopwords list
     alltext = database.select_all_text("data.db") #TODO: get dbpath from args
     words_data = Counter(preprocess_text(alltext, russian_stopwords))
     sorted_words_data = sorted(words_data.items(), key=lambda kv: kv[1], reverse=True)
-    print(sorted_words_data[:50])
+    top_words = sorted_words_data[:50]
+    print(top_words)
+
+    wordcloud = WordCloud(max_font_size=40).generate(word_data_to_text(top_words)) #TODO: white background
+    image = wordcloud.to_image()
+    image.show()
+
