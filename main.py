@@ -77,5 +77,6 @@ def popular_words(dbpath, top_count):
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
+    database.get_common_data("data.db")
     popular_words("data.db", 200) #TODO: get dbpath and count from args
 
