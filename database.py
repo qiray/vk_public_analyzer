@@ -27,5 +27,6 @@ def get_common_data(dbpath):
     cursor.execute("SELECT COUNT() from attachments")
     result += cursor.fetchone()
     end_connecion(conn)
-    print(result) #posts, likes, reposts, comments, views, ads, attachmens
+    names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
+    return result, names
 

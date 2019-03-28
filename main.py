@@ -14,7 +14,6 @@ import database
 
 #TODO:
 # TODOlist
-# common data - posts, likes, reposts, comments, views, attachmens, ads etc.
 # most and average likes, comments, views, reposts and ratio
 # average and top attachments
 # best authors - posts count and likes, reposts
@@ -28,6 +27,7 @@ import database
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 
 OUTPUT_DIR = "output/"
+DB_PATH = "data.db"
 
 def preprocess_text(text):
     '''Convert text to tokens list'''
@@ -66,17 +66,30 @@ def popular_words(dbpath, top_count):
 
     f = open(OUTPUT_DIR + "top_words.csv","w")
     f.write('Word;Count\n')
+    print("\nTop words:")
     for word in top_words:
         f.write('%s;%d\n' % (word[0], word[1]))
+        print(word[0], "=", word[1])
     f.close()
 
     make_wordcloud(allwords_text, OUTPUT_DIR + 'allwords.png')
     make_wordcloud(word_data_to_text(top_words), OUTPUT_DIR + 'topwords.png')
     make_wordcloud(' '.join(get_hashtags(alltext)), OUTPUT_DIR + 'hashtags.png')
 
+def common_data(dbpath):
+    data, names = database.get_common_data(dbpath)
+    f = open(OUTPUT_DIR + "common.csv","w")
+    f.write('Parameter;Count\n')
+    print("\nCommon data:")
+    for i, value in enumerate(data):
+        f.write('%s;%d\n' % (names[i], value))
+        print(names[i], "=", value)
+    f.close()
+
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
-    database.get_common_data("data.db")
-    popular_words("data.db", 200) #TODO: get dbpath and count from args
+    #TODO: get dbpath and count from args
+    common_data(DB_PATH)
+    popular_words(DB_PATH, 200)
 

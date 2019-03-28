@@ -28,3 +28,8 @@ CREATE TABLE IF NOT EXISTS attachments (
     PRIMARY KEY (id, type, post_id)
 );
 ```
+
+## What we can
+
+- Show common data
+- Build word cloud
