@@ -31,5 +31,16 @@ CREATE TABLE IF NOT EXISTS attachments (
 
 ## What we can
 
-- Show common data
-- Build word cloud
+- Show common and average data;
+- Find top words and hashtags;
+- Build word cloud;
+- Make output images and csv-files.
+
+## How you can help
+
+- Contribute;
+- Star and repost at github.com;
+- Tell your friends;
+- Write an article;
+- Use in your project;
+- Donate.

@@ -3,8 +3,8 @@
 import os
 import random
 import re
+import string
 from collections import Counter
-from string import punctuation
 
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
@@ -14,16 +14,16 @@ import database
 
 #TODO:
 # TODOlist
-# most and average likes, comments, views, reposts and ratio
+# mediana, moda and expected value for likes, comments, views, reposts, attachments and ratio.
+# most likes, comments, views, reposts, attachments.
 # average and top attachments
+# top attachments - images, video, URLs or audio
 # best authors - posts count and likes, reposts
 # best time for publications - graphics
 # word, post, attachment count by time - graphics
 # top polls
-# top attachments - images, video, URLs or audio
 # word2vec
 # some more from https://habr.com/ru/post/429270/
-# csv and images output
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 
 OUTPUT_DIR = "output/"
@@ -35,7 +35,7 @@ def preprocess_text(text):
     russian_stopwords = stopwords.words("russian") #init stopwords list
     tokens = mystem.lemmatize(text.lower())
     tokens = [token for token in tokens if token not in russian_stopwords\
-        and token != " " and token.strip() not in punctuation]
+        and token != " " and token.strip() not in string.punctuation]
     return tokens
 
 def get_hashtags(text):
@@ -58,9 +58,11 @@ def make_wordcloud(words, output_path):
     image.save(output_path)
 
 def popular_words(dbpath, top_count):
+    pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
     alltext = database.select_all_text(dbpath) #whole plain text
     words_data = preprocess_text(alltext) #list of preprocessed words
     allwords_text = ' '.join(words_data) #text with preprocessed words
+    words_data = [x for x in words_data if pattern.match(x)] #remove non-words
     sorted_words_data = sorted(Counter(words_data).items(), key=lambda kv: kv[1], reverse=True)
     top_words = sorted_words_data[:top_count] #list of tuples of top words
 
@@ -79,11 +81,12 @@ def popular_words(dbpath, top_count):
 def common_data(dbpath):
     data, names = database.get_common_data(dbpath)
     f = open(OUTPUT_DIR + "common.csv","w")
-    f.write('Parameter;Count\n')
+    f.write('Parameter;Count;Average\n')
     print("\nCommon data:")
+    count = data[0]
     for i, value in enumerate(data):
-        f.write('%s;%d\n' % (names[i], value))
-        print(names[i], "=", value)
+        f.write('%s;%d;%.4f\n' % (names[i], value, value/count))
+        print('%s = %d (%.4g)' % (names[i], value, value/count))
     f.close()
 
 if __name__ == '__main__':
