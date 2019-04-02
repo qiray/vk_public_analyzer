@@ -1,6 +1,8 @@
 
 import sqlite3
 
+#TODO: make class with these methods:
+
 def start_connection(dbpath):
     """Open database and return connection with cursor to it"""
     conn = sqlite3.connect(dbpath)
@@ -29,4 +31,11 @@ def get_common_data(dbpath):
     end_connecion(conn)
     names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
     return result, names
+
+def get_column_data(dbpath, column):
+    conn, cursor = start_connection(dbpath)
+    cursor.execute("SELECT %s from posts" % (column))
+    result = cursor.fetchall()
+    end_connecion(conn)
+    return [x[0] for x in result]
 

@@ -4,6 +4,7 @@ import os
 import random
 import re
 import string
+import statistics
 from collections import Counter
 
 from nltk.corpus import stopwords
@@ -95,4 +96,11 @@ if __name__ == '__main__':
     #TODO: get dbpath and count from args
     common_data(DB_PATH)
     popular_words(DB_PATH, 200)
+
+    #TODO: use it instead of common_data?
+    # likes = database.get_column_data(DB_PATH, 'likes_count')
+    # print(statistics.median(likes))
+    # print(statistics.mode(likes))
+    # print(statistics.mean(likes))
+    # print(statistics.stdev(likes))
 
