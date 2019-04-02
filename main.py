@@ -58,9 +58,9 @@ def make_wordcloud(words, output_path):
     image = wordcloud.to_image()
     image.save(output_path)
 
-def popular_words(dbpath, top_count):
+def popular_words(db, top_count):
     pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
-    alltext = database.select_all_text(dbpath) #whole plain text
+    alltext = db.select_all_text() #whole plain text
     words_data = preprocess_text(alltext) #list of preprocessed words
     allwords_text = ' '.join(words_data) #text with preprocessed words
     words_data = [x for x in words_data if pattern.match(x)] #remove non-words
@@ -79,8 +79,8 @@ def popular_words(dbpath, top_count):
     make_wordcloud(word_data_to_text(top_words), OUTPUT_DIR + 'topwords.png')
     make_wordcloud(' '.join(get_hashtags(alltext)), OUTPUT_DIR + 'hashtags.png')
 
-def common_data(dbpath):
-    data, names = database.get_common_data(dbpath)
+def common_data(db):
+    data, names = db.get_common_data()
     f = open(OUTPUT_DIR + "common.csv","w")
     f.write('Parameter;Count;Average\n')
     print("\nCommon data:")
@@ -94,11 +94,12 @@ if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
     #TODO: get dbpath and count from args
-    common_data(DB_PATH)
-    popular_words(DB_PATH, 200)
+    db = database.DataBase(DB_PATH)
+    common_data(db)
+    popular_words(db, 200)
 
     #TODO: use it instead of common_data?
-    # likes = database.get_column_data(DB_PATH, 'likes_count')
+    # likes = db.get_column_data('likes_count')
     # print(statistics.median(likes))
     # print(statistics.mode(likes))
     # print(statistics.mean(likes))
