@@ -28,13 +28,13 @@ class DataBase(object):
 
     def get_common_data(self):
         conn, cursor = self.start_connection()
-        cursor.execute("SELECT COUNT(), SUM(likes_count), SUM(reposts_count), SUM(comments_count), SUM(views_count), SUM(marked_as_ads) from posts")
+        cursor.execute("SELECT COUNT(), SUM(likes_count), SUM(reposts_count), SUM(comments_count),\
+            SUM(views_count), SUM(marked_as_ads), SUM(attachments_count) from posts")
         result = cursor.fetchone()
-        cursor.execute("SELECT COUNT() from attachments")
-        result += cursor.fetchone()
         self.end_connecion(conn)
         names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
-        return result, names
+        columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 'marked_as_ads', 'attachments_count')
+        return result, names, columns
 
     def get_column_data(self, column):
         conn, cursor = self.start_connection()

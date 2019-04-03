@@ -10,12 +10,13 @@ from collections import Counter
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
 from wordcloud import WordCloud
+import tabulate
 
 import database
 
 #TODO:
 # TODOlist
-# mediana, moda and expected value for likes, comments, views, reposts, attachments and ratio.
+# Info about text length
 # most likes, comments, views, reposts, attachments.
 # average and top attachments
 # top attachments - images, video, URLs or audio
@@ -80,14 +81,30 @@ def popular_words(db, top_count):
     make_wordcloud(' '.join(get_hashtags(alltext)), OUTPUT_DIR + 'hashtags.png')
 
 def common_data(db):
-    data, names = db.get_common_data()
+    data, names, columns = db.get_common_data()
     f = open(OUTPUT_DIR + "common.csv","w")
-    f.write('Parameter;Count;Average\n')
+    headers = ['Parameter', 'Count', 'Average (Mean)', 'Median', 'Mode', 'Stdev']
+    header = ";".join(headers)
+    f.write(header + '\n')
     print("\nCommon data:")
     count = data[0]
+    column_count = 0
+    table_values = []
     for i, value in enumerate(data):
-        f.write('%s;%d;%.4f\n' % (names[i], value, value/count))
-        print('%s = %d (%.4g)' % (names[i], value, value/count))
+        values = []
+        if i > 0 and column_count < len(columns):
+            data_values = db.get_column_data(columns[column_count])
+            values = [names[i], value, value/count, statistics.median(data_values), statistics.mode(data_values),
+                statistics.stdev(data_values)]
+            f.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], 
+                values[4], values[5]))
+            column_count += 1
+            table_values.append(values)
+        else:
+            values = [names[i], value, value/count]
+            f.write('%s;%d;%.4g\n' % (values[0], values[1], values[2]))
+            table_values.append(values)
+    print (tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
     f.close()
 
 if __name__ == '__main__':
@@ -97,11 +114,4 @@ if __name__ == '__main__':
     db = database.DataBase(DB_PATH)
     common_data(db)
     popular_words(db, 200)
-
-    #TODO: use it instead of common_data?
-    # likes = db.get_column_data('likes_count')
-    # print(statistics.median(likes))
-    # print(statistics.mode(likes))
-    # print(statistics.mean(likes))
-    # print(statistics.stdev(likes))
 
