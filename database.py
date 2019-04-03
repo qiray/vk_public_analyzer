@@ -6,6 +6,8 @@ class DataBase(object):
 
     def __init__(self, dbpath):
         self.dbpath = dbpath
+        self.names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
+        self.columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 'marked_as_ads', 'attachments_count')
 
     def start_connection(self):
         """Open database and return connection with cursor to it"""
@@ -32,9 +34,7 @@ class DataBase(object):
             SUM(views_count), SUM(marked_as_ads), SUM(attachments_count) from posts")
         result = cursor.fetchone()
         self.end_connecion(conn)
-        names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
-        columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 'marked_as_ads', 'attachments_count')
-        return result, names, columns
+        return result, self.names, self.columns
 
     def get_column_data(self, column):
         conn, cursor = self.start_connection()
@@ -42,3 +42,18 @@ class DataBase(object):
         result = cursor.fetchall()
         self.end_connecion(conn)
         return [x[0] for x in result]
+
+    def get_texts_length(self):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT LENGTH(text) from posts")
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return [x[0] for x in result]
+
+    def get_extremum_data(self, column, find_max=True):
+        extremum_type = "MAX" if find_max else "MIN"
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT %s(%s), id from posts" % (extremum_type, column))
+        result = cursor.fetchone()
+        self.end_connecion(conn)
+        return result

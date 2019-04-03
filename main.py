@@ -16,7 +16,6 @@ import database
 
 #TODO:
 # TODOlist
-# Info about text length
 # most likes, comments, views, reposts, attachments.
 # average and top attachments
 # top attachments - images, video, URLs or audio
@@ -80,6 +79,18 @@ def popular_words(db, top_count):
     make_wordcloud(word_data_to_text(top_words), OUTPUT_DIR + 'topwords.png')
     make_wordcloud(' '.join(get_hashtags(alltext)), OUTPUT_DIR + 'hashtags.png')
 
+def common_data_row(data_values, value, name, count, csvfile):
+    try:
+        mode = statistics.mode(data_values)
+    except:
+        print("[Warning] %s doesn't have unique mode")
+        mode = 0
+    values = [name, value, value/count, statistics.median(data_values), mode,
+        statistics.stdev(data_values)]
+    csvfile.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], 
+        values[4], values[5]))
+    return values
+
 def common_data(db):
     data, names, columns = db.get_common_data()
     f = open(OUTPUT_DIR + "common.csv","w")
@@ -93,17 +104,17 @@ def common_data(db):
     for i, value in enumerate(data):
         values = []
         if i > 0 and column_count < len(columns):
-            data_values = db.get_column_data(columns[column_count])
-            values = [names[i], value, value/count, statistics.median(data_values), statistics.mode(data_values),
-                statistics.stdev(data_values)]
-            f.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], 
-                values[4], values[5]))
+            table_values.append(common_data_row(db.get_column_data(columns[column_count]),
+                value, names[i], count, f))
             column_count += 1
-            table_values.append(values)
         else:
             values = [names[i], value, value/count]
             f.write('%s;%d;%.4g\n' % (values[0], values[1], values[2]))
             table_values.append(values)
+
+    data_values = db.get_texts_length()
+    table_values.append(common_data_row(data_values, sum(data_values), "Text", count, f))
+
     print (tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
     f.close()
 
@@ -114,4 +125,4 @@ if __name__ == '__main__':
     db = database.DataBase(DB_PATH)
     common_data(db)
     popular_words(db, 200)
-
+    # print(db.get_extremum_data("likes_count", find_max=False))
