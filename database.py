@@ -53,6 +53,14 @@ class DataBase(object):
         self.end_connecion(conn)
         return [x[0] for x in result]
 
+    def get_top10_data(self, column, find_max=True):
+        extremum_type = "DESC" if find_max else "ASC"
+        conn, cursor = self.start_connection()
+        cursor.execute("select %s, id from posts ORDER BY %s %s LIMIT 10" % (column, column, extremum_type))
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return result
+
     def get_extremum_data(self, column, find_max=True):
         extremum_type = "MAX" if find_max else "MIN"
         conn, cursor = self.start_connection()

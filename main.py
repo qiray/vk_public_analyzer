@@ -16,6 +16,7 @@ import database
 
 #TODO:
 # TODOlist
+# Add checks if data is to small
 # average and top attachments types - images, video, URLs or audio
 # best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
@@ -148,6 +149,7 @@ if __name__ == '__main__':
         os.mkdir(OUTPUT_DIR)
     #TODO: get dbpath and count from args
     db = database.DataBase(DB_PATH)
+    # print(db.get_top10_data('likes_count'))
     common_data(db)
     extremum_data(db)
     popular_words(db, 200)
