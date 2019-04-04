@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS attachments (
 
 ## What we can
 
-- Show common and average data;
+- Show statistics about likes, reposts, views, comments, ads and attachments;
+- Show top posts - by likes, reposts, views, comments, ads, attachments and text length; 
 - Find top words and hashtags;
 - Build word cloud;
 - Make output images and csv-files.

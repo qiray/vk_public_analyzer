@@ -9,6 +9,9 @@ class DataBase(object):
         self.names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
         self.columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 'marked_as_ads', 'attachments_count')
 
+    def get_names__and_columns(self):
+        return self.names, self.columns
+
     def start_connection(self):
         """Open database and return connection with cursor to it"""
         conn = sqlite3.connect(self.dbpath)
@@ -54,6 +57,14 @@ class DataBase(object):
         extremum_type = "MAX" if find_max else "MIN"
         conn, cursor = self.start_connection()
         cursor.execute("SELECT %s(%s), id from posts" % (extremum_type, column))
+        result = cursor.fetchone()
+        self.end_connecion(conn)
+        return result
+
+    def get_extremum_text_length(self, find_max=True):
+        extremum_type = "MAX" if find_max else "MIN"
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT %s(LENGTH(text)), id from posts" % (extremum_type))
         result = cursor.fetchone()
         self.end_connecion(conn)
         return result

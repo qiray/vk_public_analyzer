@@ -16,13 +16,11 @@ import database
 
 #TODO:
 # TODOlist
-# most likes, comments, views, reposts, attachments.
-# average and top attachments
-# top attachments - images, video, URLs or audio
-# best authors - posts count and likes, reposts
+# average and top attachments types - images, video, URLs or audio
+# best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
 # word, post, attachment count by time - graphics
-# top polls
+# top polls - users count
 # word2vec
 # some more from https://habr.com/ru/post/429270/
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
@@ -69,11 +67,14 @@ def popular_words(db, top_count):
 
     f = open(OUTPUT_DIR + "top_words.csv","w")
     f.write('Word;Count\n')
+    headers = ['Word', 'Count']
     print("\nTop words:")
+    table_values = []
     for word in top_words:
         f.write('%s;%d\n' % (word[0], word[1]))
-        print(word[0], "=", word[1])
+        table_values.append(word)
     f.close()
+    print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
 
     make_wordcloud(allwords_text, OUTPUT_DIR + 'allwords.png')
     make_wordcloud(word_data_to_text(top_words), OUTPUT_DIR + 'topwords.png')
@@ -102,7 +103,6 @@ def common_data(db):
     column_count = 0
     table_values = []
     for i, value in enumerate(data):
-        values = []
         if i > 0 and column_count < len(columns):
             table_values.append(common_data_row(db.get_column_data(columns[column_count]),
                 value, names[i], count, f))
@@ -115,8 +115,33 @@ def common_data(db):
     data_values = db.get_texts_length()
     table_values.append(common_data_row(data_values, sum(data_values), "Text", count, f))
 
-    print (tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
     f.close()
+    print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
+
+def extremum_data(db): #TODO: show top 10 posts for each parameter
+    names, columns = db.get_names__and_columns()
+    names = names[1:] #remove posts from tuple
+    f = open(OUTPUT_DIR + "extremum.csv","w")
+    headers = ['Parameter', 'Max', 'Max id', 'Min', 'Min id']
+    header = ";".join(headers)
+    f.write(header + '\n')
+    print("\nExtremum data:")
+    table_values = []
+    for i in range(len(names)):
+        max_values = db.get_extremum_data(columns[i])
+        min_values = db.get_extremum_data(columns[i], find_max=False)
+        values = [names[i], max_values[0], max_values[1], min_values[0], min_values[1]]
+        f.write('%s;%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3], values[4]))
+        table_values.append(values)
+
+    max_values = db.get_extremum_text_length()
+    min_values = db.get_extremum_text_length(find_max=False)
+    values = ['Text', max_values[0], max_values[1], min_values[0], min_values[1]]
+    f.write('%s;%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3], values[4]))
+    table_values.append(values)
+
+    f.close()
+    print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
 
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
@@ -124,5 +149,5 @@ if __name__ == '__main__':
     #TODO: get dbpath and count from args
     db = database.DataBase(DB_PATH)
     common_data(db)
+    extremum_data(db)
     popular_words(db, 200)
-    # print(db.get_extremum_data("likes_count", find_max=False))
