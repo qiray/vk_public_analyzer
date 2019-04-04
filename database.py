@@ -53,26 +53,18 @@ class DataBase(object):
         self.end_connecion(conn)
         return [x[0] for x in result]
 
-    def get_top10_data(self, column, find_max=True):
+    def get_top_data(self, column, top_count=10, find_max=True):
         extremum_type = "DESC" if find_max else "ASC"
         conn, cursor = self.start_connection()
-        cursor.execute("select %s, id from posts ORDER BY %s %s LIMIT 10" % (column, column, extremum_type))
+        cursor.execute("select %s, id from posts ORDER BY %s %s LIMIT %d" % (column, column, extremum_type, top_count))
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
 
-    def get_extremum_data(self, column, find_max=True):
-        extremum_type = "MAX" if find_max else "MIN"
+    def get_top_texts(self, top_count=10, find_max=True):
+        extremum_type = "DESC" if find_max else "ASC"
         conn, cursor = self.start_connection()
-        cursor.execute("SELECT %s(%s), id from posts" % (extremum_type, column))
-        result = cursor.fetchone()
-        self.end_connecion(conn)
-        return result
-
-    def get_extremum_text_length(self, find_max=True):
-        extremum_type = "MAX" if find_max else "MIN"
-        conn, cursor = self.start_connection()
-        cursor.execute("SELECT %s(LENGTH(text)), id from posts" % (extremum_type))
-        result = cursor.fetchone()
+        cursor.execute("select LENGTH(text), id from posts ORDER BY LENGTH(text) %s LIMIT %d" % (extremum_type, top_count))
+        result = cursor.fetchall()
         self.end_connecion(conn)
         return result

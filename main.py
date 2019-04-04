@@ -17,6 +17,7 @@ import database
 #TODO:
 # TODOlist
 # Add checks if data is to small
+# count posts without text, likes, comments, reposts and attachments
 # average and top attachments types - images, video, URLs or audio
 # best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
@@ -89,7 +90,7 @@ def common_data_row(data_values, value, name, count, csvfile):
         mode = 0
     values = [name, value, value/count, statistics.median(data_values), mode,
         statistics.stdev(data_values)]
-    csvfile.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], 
+    csvfile.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3],
         values[4], values[5]))
     return values
 
@@ -119,37 +120,40 @@ def common_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
-def extremum_data(db): #TODO: show top 10 posts for each parameter
-    names, columns = db.get_names__and_columns()
-    names = names[1:] #remove posts from tuple
-    f = open(OUTPUT_DIR + "extremum.csv","w")
-    headers = ['Parameter', 'Max', 'Max id', 'Min', 'Min id']
+def top_data(name, max_values, min_values):
+    '''Show top data'''
+    f = open(OUTPUT_DIR + "extremum_%s.csv" % (name),"w")
+    headers = ['id', 'Max', 'id', 'Min']
+    if not min_values:
+        headers = ['id', 'Max']
     header = ";".join(headers)
     f.write(header + '\n')
-    print("\nExtremum data:")
+    print("\n%s extremum data:" % (name))
     table_values = []
-    for i in range(len(names)):
-        max_values = db.get_extremum_data(columns[i])
-        min_values = db.get_extremum_data(columns[i], find_max=False)
-        values = [names[i], max_values[0], max_values[1], min_values[0], min_values[1]]
-        f.write('%s;%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3], values[4]))
+    for i in range(len(max_values)):
+        if min_values:
+            values = [max_values[i][1], max_values[i][0], min_values[i][1], min_values[i][0]]
+            f.write('%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3]))
+        else:
+            values = [max_values[i][1], max_values[i][0]]
+            f.write('%d;%d;\n' % (values[0], values[1]))
         table_values.append(values)
-
-    max_values = db.get_extremum_text_length()
-    min_values = db.get_extremum_text_length(find_max=False)
-    values = ['Text', max_values[0], max_values[1], min_values[0], min_values[1]]
-    f.write('%s;%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3], values[4]))
-    table_values.append(values)
-
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
+
+def alltop_data(db, top_count):
+    names = ('Likes', 'Reposts', 'Comments', 'Views', 'Attachments')
+    columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 
+        'attachments_count')
+    for i in range(len(names)):
+        top_data(names[i], db.get_top_data(columns[i], top_count), None)
+    top_data('Text', db.get_top_texts(top_count), None)
 
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
     #TODO: get dbpath and count from args
     db = database.DataBase(DB_PATH)
-    # print(db.get_top10_data('likes_count'))
     common_data(db)
-    extremum_data(db)
+    alltop_data(db, 10)
     popular_words(db, 200)
