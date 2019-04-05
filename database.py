@@ -70,7 +70,7 @@ class DataBase(object):
     def get_top_data(self, column, top_count=10, find_max=True):
         extremum_type = "DESC" if find_max else "ASC"
         conn, cursor = self.start_connection()
-        cursor.execute("select %s, id from posts ORDER BY %s %s LIMIT %d" % (column, column, extremum_type, top_count))
+        cursor.execute("SELECT %s, id FROM posts ORDER BY %s %s LIMIT %d" % (column, column, extremum_type, top_count))
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
@@ -78,7 +78,14 @@ class DataBase(object):
     def get_top_texts(self, top_count=10, find_max=True):
         extremum_type = "DESC" if find_max else "ASC"
         conn, cursor = self.start_connection()
-        cursor.execute("select LENGTH(text), id from posts ORDER BY LENGTH(text) %s LIMIT %d" % (extremum_type, top_count))
+        cursor.execute("SELECT LENGTH(text), id FROM posts ORDER BY LENGTH(text) %s LIMIT %d" % (extremum_type, top_count))
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return result
+
+    def get_attachments_types(self):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT type, COUNT(type) FROM attachments GROUP BY type")
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
