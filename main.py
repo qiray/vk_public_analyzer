@@ -17,7 +17,6 @@ import database
 #TODO:
 # TODOlist
 # Add checks if data is to small
-# count posts without text, likes, comments, reposts and attachments
 # average and top attachments types - images, video, URLs or audio
 # best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
@@ -149,6 +148,25 @@ def alltop_data(db, top_count):
         top_data(names[i], db.get_top_data(columns[i], top_count), None)
     top_data('Text', db.get_top_texts(top_count), None)
 
+def zero_data(db):
+    names = ('Likes', 'Reposts', 'Comments', 'Attachments')
+    columns = ('likes_count', 'reposts_count', 'comments_count', 'attachments_count')
+    f = open(OUTPUT_DIR + "zeros.csv", "w")
+    headers = ['Parameter', 'Count']
+    header = ";".join(headers)
+    f.write(header + '\n')
+    print("\nPosts without:")
+    table_values = []
+    for i in range(len(names)):
+        values = [names[i], db.get_zero_data(columns[i])]
+        f.write('%s;%d\n' % (values[0], values[1]))
+        table_values.append(values)
+    values = ['Text', db.get_zero_texts()]
+    f.write('%s;%d\n' % (values[0], values[1]))
+    table_values.append(values)
+    f.close()
+    print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
+
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
@@ -156,4 +174,5 @@ if __name__ == '__main__':
     db = database.DataBase(DB_PATH)
     common_data(db)
     alltop_data(db, 10)
+    zero_data(db)
     popular_words(db, 200)

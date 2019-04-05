@@ -46,6 +46,20 @@ class DataBase(object):
         self.end_connecion(conn)
         return [x[0] for x in result]
 
+    def get_zero_data(self, column):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT COUNT() from posts WHERE %s = 0" % (column))
+        result = cursor.fetchone()
+        self.end_connecion(conn)
+        return result[0]
+
+    def get_zero_texts(self):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT COUNT() from posts WHERE LENGTH(text) = 0")
+        result = cursor.fetchone()
+        self.end_connecion(conn)
+        return result[0]
+
     def get_texts_length(self):
         conn, cursor = self.start_connection()
         cursor.execute("SELECT LENGTH(text) from posts")
