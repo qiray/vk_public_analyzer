@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS attachments (
 - Show statistics about likes, reposts, views, comments, ads and attachments;
 - Show top posts - by likes, reposts, views, comments, attachments and text length;
 - Show count of posts without texts, likes, reposts, comments and attachments;
+- Show count of each known attachment types;
 - Find top words and hashtags;
 - Build word cloud;
 - Make output images and csv-files.

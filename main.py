@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import os
+import glob
 import random
 import re
 import string
@@ -16,7 +17,6 @@ import database
 
 #TODO:
 # TODOlist
-# average and top attachments types - images, video, URLs or audio
 # best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
 # word, post, attachment count by time - graphics
@@ -108,8 +108,8 @@ def common_data(db):
                 value, names[i], count, f))
             column_count += 1
         else:
-            values = [names[i], value, value/count]
-            f.write('%s;%d;%.4g\n' % (values[0], values[1], values[2]))
+            values = [names[i], value]
+            f.write('%s;%d\n' % (values[0], values[1]))
             table_values.append(values)
 
     data_values = db.get_texts_length()
@@ -166,13 +166,34 @@ def zero_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
 
+def attachments_data(db):
+    data, names = db.get_attachments_types()
+    f = open(OUTPUT_DIR + "attachments.csv","w")
+    headers = ['Parameter', 'Count']
+    header = ";".join(headers)
+    f.write(header + '\n')
+    print("\nAttachments data:")
+    table_values = []
+    for i, value in enumerate(data):
+        values = [names[i], value[1]]
+        f.write('%s;%d\n' % (values[0], values[1]))
+        table_values.append(values)
+    f.close()
+    print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
+
+
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
+    else: #folder exists so clean it's contents
+        files = glob.glob('%s/*' % (OUTPUT_DIR))
+        for f in files:
+            os.remove(f)
     #TODO: get dbpath and count from args
     db = database.DataBase(DB_PATH)
     common_data(db)
     alltop_data(db, 10)
     zero_data(db)
+    attachments_data(db)
     popular_words(db, 200)
-    # print(db.get_attachments_types())
+    # select signer_id, COUNT(signer_id) from posts group by signer_id order by COUNT(signer_id) DESC;
