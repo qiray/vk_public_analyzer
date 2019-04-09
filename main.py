@@ -84,7 +84,7 @@ def common_data_row(data_values, value, name, count, csvfile):
     try:
         mode = statistics.mode(data_values)
     except:
-        print("[Warning] %s doesn't have unique mode")
+        print("[Warning] %s doesn't have unique mode" % (name))
         mode = 0
     values = [name, value, value/count, statistics.median(data_values), mode,
         statistics.stdev(data_values)]
@@ -181,9 +181,28 @@ def attachments_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
+def common_authors_data(db): #TODO: add info about reposts
+    data = db.get_posts_by_authors()
+    f = open(OUTPUT_DIR + "authors.csv","w")
+    headers = ['Author id', 'Posts count', 'Likes count', 'Average likes', 'Median likes']
+    header = ";".join(headers)
+    f.write(header + '\n')
+    print("\nAuthors data:")
+    table_values = []
+    for i, _ in enumerate(data):
+        posts = db.get_posts_by_author(data[i][0])
+        posts_likes = [x[0] for x in posts]
+        values = [data[i][0], data[i][1], data[i][2], data[i][2]/data[i][1], statistics.median(posts_likes)]
+        f.write('%d;%d;%d;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], values[4]))
+        table_values.append(values)
+    f.close()
+    print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
+        import nltk
+        print('Loading russian stopwords for NLTK')
+        nltk.download("stopwords")
         os.mkdir(OUTPUT_DIR)
     else: #folder exists so clean it's contents
         files = glob.glob('%s/*' % (OUTPUT_DIR))
@@ -196,4 +215,4 @@ if __name__ == '__main__':
     zero_data(db)
     attachments_data(db)
     popular_words(db, 200)
-    # select signer_id, COUNT(signer_id) from posts group by signer_id order by COUNT(signer_id) DESC;
+    common_authors_data(db)

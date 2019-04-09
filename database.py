@@ -90,3 +90,17 @@ class DataBase(object):
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result, self.attachments
+
+    def get_posts_by_authors(self):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT signer_id, COUNT(signer_id), SUM(likes_count) FROM posts GROUP BY signer_id ORDER BY COUNT(signer_id) DESC")
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return result
+
+    def get_posts_by_author(self, author_id):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT likes_count, * FROM posts WHERE signer_id = %s" % (author_id))
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return result

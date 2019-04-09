@@ -40,10 +40,15 @@ CREATE TABLE IF NOT EXISTS attachments (
 - Build word cloud;
 - Make output images and csv-files.
 
+## Thanks
+
+- Yandex Mystem;
+- Some python libs.
+
 ## How you can help
 
 - Contribute;
-- Star and repost at github.com;
+- Star and repost on github - [https://github.com/qiray/vk_public_analyzer](https://github.com/qiray/vk_public_analyzer);
 - Tell your friends;
 - Write an article;
 - Use in your project;
