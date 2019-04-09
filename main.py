@@ -84,8 +84,8 @@ def common_data_row(data_values, value, name, count, csvfile):
     try:
         mode = statistics.mode(data_values)
     except:
-        print("[Warning] %s doesn't have unique mode" % (name))
-        mode = 0
+        c = Counter(data_values)
+        mode = c.most_common(1)[0][0]
     values = [name, value, value/count, statistics.median(data_values), mode,
         statistics.stdev(data_values)]
     csvfile.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3],
@@ -181,19 +181,33 @@ def attachments_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
-def common_authors_data(db): #TODO: add info about reposts
+def get_statistics_info(data, name): #TODO: use it
+    if len(data) < 2:
+        return [data[0]*3]
+    try:
+        mode = statistics.mode(data)
+        stdev = statistics.stdev(data)
+    except:
+        c = Counter(data)
+        mode = c.most_common(1)[0][0]
+        stdev = 0
+    return [statistics.median(data), mode, stdev]
+
+def common_authors_data(db): #TODO: use get_statistics_info
     data = db.get_posts_by_authors()
     f = open(OUTPUT_DIR + "authors.csv","w")
-    headers = ['Author id', 'Posts count', 'Likes count', 'Average likes', 'Median likes']
+    headers = ['Author id', 'Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Attachments']
     header = ";".join(headers)
     f.write(header + '\n')
     print("\nAuthors data:")
     table_values = []
     for i, _ in enumerate(data):
-        posts = db.get_posts_by_author(data[i][0])
-        posts_likes = [x[0] for x in posts]
-        values = [data[i][0], data[i][1], data[i][2], data[i][2]/data[i][1], statistics.median(posts_likes)]
-        f.write('%d;%d;%d;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3], values[4]))
+        # posts = db.get_posts_by_author(data[i][0])
+        # posts_likes = [x[0] for x in posts]
+        values = [data[i][0], data[i][1], data[i][2], data[i][3],
+            data[i][4], data[i][5], data[i][6]]
+        f.write('%d;%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
+            values[3], values[4], values[5], values[6]))
         table_values.append(values)
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
