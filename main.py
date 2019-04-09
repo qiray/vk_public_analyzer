@@ -17,7 +17,6 @@ import database
 
 #TODO:
 # TODOlist
-# best authors (top 10-20) - posts count and likes, reposts
 # best time for publications - graphics
 # word, post, attachment count by time - graphics
 # top polls - users count
@@ -121,20 +120,22 @@ def common_data(db):
 def top_data(name, max_values, min_values):
     '''Show top data'''
     f = open(OUTPUT_DIR + "extremum_%s.csv" % (name),"w")
-    headers = ['id', 'Max', 'id', 'Min']
+    headers = ['Post id', 'Max', 'Author id', 'Post id', 'Min', 'Author id']
     if not min_values:
-        headers = ['id', 'Max']
+        headers = ['Post id', 'Max', 'Author id']
     header = ";".join(headers)
     f.write(header + '\n')
     print("\n%s extremum data:" % (name))
     table_values = []
     for i in range(len(max_values)):
         if min_values:
-            values = [max_values[i][1], max_values[i][0], min_values[i][1], min_values[i][0]]
-            f.write('%d;%d;%d;%d\n' % (values[0], values[1], values[2], values[3]))
+            values = [max_values[i][1], max_values[i][0], max_values[i][2],
+                min_values[i][1], min_values[i][0], min_values[i][2]]
+            f.write('%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
+                values[3], values[4], values[5]))
         else:
-            values = [max_values[i][1], max_values[i][0]]
-            f.write('%d;%d;\n' % (values[0], values[1]))
+            values = [max_values[i][1], max_values[i][0], max_values[i][2]]
+            f.write('%d;%d;%d\n' % (values[0], values[1], values[2]))
         table_values.append(values)
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
@@ -181,33 +182,20 @@ def attachments_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
-def get_statistics_info(data, name): #TODO: use it
-    if len(data) < 2:
-        return [data[0]*3]
-    try:
-        mode = statistics.mode(data)
-        stdev = statistics.stdev(data)
-    except:
-        c = Counter(data)
-        mode = c.most_common(1)[0][0]
-        stdev = 0
-    return [statistics.median(data), mode, stdev]
-
-def common_authors_data(db): #TODO: use get_statistics_info
+def common_authors_data(db):
     data = db.get_posts_by_authors()
     f = open(OUTPUT_DIR + "authors.csv","w")
-    headers = ['Author id', 'Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Attachments']
+    headers = ['Author id', 'Posts', 'Likes', 'Reposts', 'Comments', 
+        'Views', 'Attachments', 'Text length']
     header = ";".join(headers)
     f.write(header + '\n')
     print("\nAuthors data:")
     table_values = []
     for i, _ in enumerate(data):
-        # posts = db.get_posts_by_author(data[i][0])
-        # posts_likes = [x[0] for x in posts]
         values = [data[i][0], data[i][1], data[i][2], data[i][3],
-            data[i][4], data[i][5], data[i][6]]
-        f.write('%d;%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
-            values[3], values[4], values[5], values[6]))
+            data[i][4], data[i][5], data[i][6], data[i][7]]
+        f.write('%d;%d;%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
+            values[3], values[4], values[5], values[6], values[7]))
         table_values.append(values)
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
@@ -228,5 +216,5 @@ if __name__ == '__main__':
     alltop_data(db, 10)
     zero_data(db)
     attachments_data(db)
-    popular_words(db, 200)
     common_authors_data(db)
+    popular_words(db, 200)
