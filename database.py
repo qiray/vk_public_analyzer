@@ -121,7 +121,7 @@ class DataBase(object):
 
     def get_posts_by_dates(self):
         conn, cursor = self.start_connection()
-        cursor.execute("SELECT date FROM posts ORDER BY date DESC LIMIT 10")
+        cursor.execute("SELECT date FROM posts ORDER BY date DESC")
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
