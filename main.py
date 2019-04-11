@@ -17,8 +17,8 @@ import database
 
 #TODO:
 # TODOlist
-# best time for publications - graphics
-# word, post, attachment count by time - graphics
+# best time for publications - graphics OR publications by days
+# word, post, attachment count by time - graphics OR data by days
 # top polls - users count
 # word2vec
 # some more from https://habr.com/ru/post/429270/
@@ -200,6 +200,10 @@ def common_authors_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
+def polls_info(db):
+    polls = db.get_polls()
+    print([x[6] for x in polls])
+
 if __name__ == '__main__':
     if not os.path.isdir(OUTPUT_DIR):
         import nltk
@@ -216,5 +220,6 @@ if __name__ == '__main__':
     alltop_data(db, 10)
     zero_data(db)
     attachments_data(db)
+    # polls_info(db)
     common_authors_data(db)
     popular_words(db, 200)

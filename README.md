@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS attachments (
     post_id INTEGER,
     url TEXT,
     additional_info text,
+    additional_info2 text,
     PRIMARY KEY (id, type, post_id)
 );
 ```

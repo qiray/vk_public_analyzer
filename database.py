@@ -110,3 +110,11 @@ class DataBase(object):
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
+
+    def get_polls(self):
+        conn, cursor = self.start_connection()
+        cursor.execute("SELECT * FROM attachments WHERE type = 'poll' ORDER BY \
+            CAST(additional_info2 as INTEGER) DESC")
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return result
