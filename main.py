@@ -26,7 +26,7 @@ if __name__ == '__main__':
         nltk.download("stopwords")
         os.mkdir(OUTPUT_DIR)
     else: #folder exists so clean it's contents
-        files = glob.glob('%s/*' % (OUTPUT_DIR))
+        files = glob.glob('%s/*' % (OUTPUT_DIR)) #TODO: clean flag from args
         for f in files:
             os.remove(f)
     #TODO: get dbpath and count from args
