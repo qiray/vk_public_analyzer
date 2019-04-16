@@ -121,7 +121,8 @@ class DataBase(object):
 
     def get_posts_by_dates(self):
         conn, cursor = self.start_connection()
-        cursor.execute("SELECT date FROM posts ORDER BY date DESC")
+        cursor.execute("SELECT date, likes_count, reposts_count, comments_count, views_count,\
+            attachments_count, LENGTH(text) FROM posts ORDER BY date DESC")
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result

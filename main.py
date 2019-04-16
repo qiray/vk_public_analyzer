@@ -38,4 +38,4 @@ if __name__ == '__main__':
     attachments.attachments_data(db)
     attachments.polls_info(db, 20)
     text_parse.popular_words(db, 200)
-    timing.dateposts(db)
+    timing.drawplots(db)
