@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS attachments (
 - Show top polls by votes;
 - Show authors info - count of posts, likes, reposts, comments, views, attachments and text length; 
 - Find top words and hashtags;
+- Draw plots with posts, likes, reposts, comments, views, attachments and text length data;
 - Build word cloud;
 - Make output images and csv-files.
 

@@ -108,6 +108,7 @@ def authors_data(db):
             data[i][4], data[i][5], data[i][6], data[i][7]]
         f.write('%d;%d;%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
             values[3], values[4], values[5], values[6], values[7]))
-        table_values.append(values)
+        if i <= 20: #Show only top 20 authors
+            table_values.append(values)
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))

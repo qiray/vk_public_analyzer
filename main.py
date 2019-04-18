@@ -12,11 +12,9 @@ import timing
 
 #TODO:
 # TODOlist
-# best time for publications - graphics OR publications by days
-# word, post, attachment count by time - graphics OR data by days
 # word2vec
 # some more from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
-# Распределение просмотров-лайков-репостов по времени дня. Среднее за неделю/месяц/год/всегда
+# Среднее просмотров-лайков-репостов за неделю/месяц/год/всегда
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 
 if __name__ == '__main__':

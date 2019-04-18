@@ -9,7 +9,21 @@ class DataBase(object):
         self.names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
         self.columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 
             'marked_as_ads', 'attachments_count')
-        self.attachments = ('Audios', 'Docs', 'Links', 'Photos', 'Polls', 'Videos')
+        self.attachments = {
+            'audio' : 'Audios',
+            'doc' : 'Docs',
+            'link' : 'Links',
+            'photo' : 'Photos',
+            'poll' : 'Polls',
+            'video' : 'Videos',
+            'page' : 'Pages',
+            'album' : 'Albums'
+        }
+
+    def get_attachments_name(self, key):
+        if key in self.attachments:
+            return self.attachments[key]
+        return ''
 
     def get_names__and_columns(self):
         return self.names, self.columns
@@ -92,7 +106,7 @@ class DataBase(object):
         cursor.execute("SELECT type, COUNT(type) FROM attachments GROUP BY type")
         result = cursor.fetchall()
         self.end_connecion(conn)
-        return result, self.attachments
+        return result
 
     def get_posts_by_authors(self):
         conn, cursor = self.start_connection()

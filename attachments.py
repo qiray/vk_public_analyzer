@@ -6,15 +6,15 @@ import tabulate
 from common_data import OUTPUT_DIR
 
 def attachments_data(db):
-    data, names = db.get_attachments_types()
+    data = db.get_attachments_types()
     f = open(OUTPUT_DIR + "attachments.csv","w")
     headers = ['Parameter', 'Count']
     header = ";".join(headers)
     f.write(header + '\n')
     print("\nAttachments data:")
     table_values = []
-    for i, value in enumerate(data):
-        values = [names[i], value[1]]
+    for value in data:
+        values = [db.get_attachments_name(value[0]), value[1]]
         f.write('%s;%d\n' % (values[0], values[1]))
         table_values.append(values)
     f.close()

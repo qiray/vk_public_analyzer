@@ -17,9 +17,14 @@ def get_element(data, index):
         return data[-1]
     return data[result]
 
+def draw_subplot(host, fixed_axis, x_range, y, offset, label):
+    par = host.twinx()
+    par.axis["right"] = fixed_axis(loc="right", axes=par, offset=(offset, 0))
+    par.set_ylabel(label)
+    p, = par.plot(x_range, y, marker='o', label=label)
+    par.axis["right"].label.set_color(p.get_color())
+
 def get_dateposts(name, data, data_range, autolocator=False):
-    #TODO: add subfunctions and comments
-    #https://matplotlib.org/examples/axes_grid/demo_parasite_axes2.html
     x = data_range
     y1 = [posts_count(data, str(i)) for i in x] #posts
     y2 = [get_count(data, str(i), 1) for i in x] #likes
@@ -31,6 +36,7 @@ def get_dateposts(name, data, data_range, autolocator=False):
 
     host = host_subplot(111, axes_class=AA.Axes)
     plt.subplots_adjust(right=0.65, bottom=0.15, left=0.05)
+    new_fixed_axis = host.get_grid_helper().new_fixed_axis
 
     plt.xticks([])
     x_range = [i for i in range(len(x))]
@@ -42,45 +48,16 @@ def get_dateposts(name, data, data_range, autolocator=False):
         plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(
             lambda i, pos: get_element(x, i)))
 
-    par1 = host.twinx()
-    par2 = host.twinx()
-    par3 = host.twinx()
-    par4 = host.twinx()
-    par5 = host.twinx()
-    par6 = host.twinx()
-
-    new_fixed_axis = par2.get_grid_helper().new_fixed_axis
-    par1.axis["right"] = new_fixed_axis(loc="right", axes=par1)
-    par2.axis["right"] = new_fixed_axis(loc="right", axes=par2, offset=(60, 0))
-    par3.axis["right"] = new_fixed_axis(loc="right", axes=par3, offset=(120, 0))
-    par4.axis["right"] = new_fixed_axis(loc="right", axes=par4, offset=(180, 0))
-    par5.axis["right"] = new_fixed_axis(loc="right", axes=par5, offset=(240, 0))
-    par6.axis["right"] = new_fixed_axis(loc="right", axes=par6, offset=(300, 0))
-
-    par2.axis["right"].toggle(all=True)
     host.set_ylabel("posts")
-    par1.set_ylabel("likes")
-    par2.set_ylabel("reposts")
-    par3.set_ylabel("comments")
-    par4.set_ylabel("views")
-    par5.set_ylabel("attachments")
-    par6.set_ylabel("text length")
-
     p1, = host.plot(x_range, y1, marker='o', label='posts')
-    p2, = par1.plot(x_range, y2, marker='o', label='likes')
-    p3, = par2.plot(x_range, y3, marker='o', label='reposts')
-    p4, = par3.plot(x_range, y4, marker='o', label='comments')
-    p5, = par4.plot(x_range, y5, marker='o', label='views')
-    p6, = par5.plot(x_range, y6, marker='o', label='attachments')
-    p7, = par6.plot(x_range, y7, marker='o', label='text length')
-
     host.axis["left"].label.set_color(p1.get_color())
-    par1.axis["right"].label.set_color(p2.get_color())
-    par2.axis["right"].label.set_color(p3.get_color())
-    par3.axis["right"].label.set_color(p4.get_color())
-    par4.axis["right"].label.set_color(p5.get_color())
-    par5.axis["right"].label.set_color(p6.get_color())
-    par6.axis["right"].label.set_color(p7.get_color())
+
+    draw_subplot(host, new_fixed_axis, x_range, y2, 0, 'likes')
+    draw_subplot(host, new_fixed_axis, x_range, y3, 60, 'reposts')
+    draw_subplot(host, new_fixed_axis, x_range, y4, 120, 'comments')
+    draw_subplot(host, new_fixed_axis, x_range, y5, 180, 'views')
+    draw_subplot(host, new_fixed_axis, x_range, y6, 240, 'attachments')
+    draw_subplot(host, new_fixed_axis, x_range, y7, 300, 'text length')
 
     host.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
         fancybox=True, shadow=True, ncol=7)
@@ -112,6 +89,7 @@ def datalist_to_dict(data, converter):
     return result
 
 def drawplots(db):
+    print('Drawing plots')
     posts = db.get_posts_by_dates()
     #TODO: add total info?
     
