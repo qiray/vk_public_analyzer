@@ -78,7 +78,7 @@ def alltop_data(db, top_count):
 def zero_data(db):
     names = ('Likes', 'Reposts', 'Comments', 'Attachments')
     columns = ('likes_count', 'reposts_count', 'comments_count', 'attachments_count')
-    f = open(OUTPUT_DIR + "zeros.csv", "w")
+    f = open(OUTPUT_DIR + "zeroes.csv", "w")
     headers = ['Parameter', 'Count']
     header = ";".join(headers)
     f.write(header + '\n')

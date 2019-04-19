@@ -89,7 +89,7 @@ def datalist_to_dict(data, converter):
     return result
 
 def drawplots(db):
-    print('Drawing plots')
+    print('\nDrawing plots')
     posts = db.get_posts_by_dates()
     #TODO: add total info?
     
@@ -120,3 +120,4 @@ def drawplots(db):
 
     hours_range = [str.format("%02d:00" % (i)) for i in range(24)]
     get_dateposts('hours.png', hours, hours_range, True)
+    print('Done')
