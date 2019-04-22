@@ -7,10 +7,11 @@ from collections import Counter
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
 from wordcloud import WordCloud
+from gensim import corpora, models
 
 import tabulate
 
-from common_data import OUTPUT_DIR
+from common_data import logging, OUTPUT_DIR
 
 def preprocess_text(text):
     '''Convert text to tokens list'''
@@ -41,7 +42,7 @@ def make_wordcloud(words, output_path):
     image.save(output_path)
 
 def popular_words(db, top_count):
-    print('\nSearching popular words...')
+    logging.info('Searching popular words...')
     pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
     alltext = db.select_all_text() #whole plain text
     words_data = preprocess_text(alltext) #list of preprocessed words
@@ -61,8 +62,21 @@ def popular_words(db, top_count):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
 
-    print('\nDrawing wordclouds')
+    logging.info('Drawing wordclouds')
     make_wordcloud(allwords_text, OUTPUT_DIR + 'allwords.png')
     make_wordcloud(word_data_to_text(top_words), OUTPUT_DIR + 'topwords.png')
     make_wordcloud(' '.join(get_hashtags(alltext)), OUTPUT_DIR + 'hashtags.png')
-    print('\nDone')
+    logging.info('Done')
+
+def get_themes(db):
+    #some material from https://github.com/Myonin/silentio.su/blob/master/topic_model_texts_lenta_ru.ipynb
+    alltext = db.select_all_text()
+    documents = [alltext.split(' ')] #TODO: tokenize and lemmatize text 
+    dictionary = corpora.Dictionary(documents)
+    corpus = [dictionary.doc2bow(text) for text in documents]
+    tfidf = models.TfidfModel(corpus)
+    corpus_tfidf = tfidf[corpus]
+    data = models.ldamodel.LdaModel(corpus_tfidf, id2word=dictionary,
+        num_topics=1,
+        passes=30, alpha=1.25, eta=1.25)
+    print(data)

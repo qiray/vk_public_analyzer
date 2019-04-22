@@ -18,7 +18,6 @@ from common_data import *
 # some more from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
 # Среднее просмотров-лайков-репостов за неделю/месяц/год/всегда
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
-# TODO: replace print with logging
 #TODO: create folder with public id
 
 def parse_args():
@@ -33,7 +32,7 @@ if __name__ == '__main__':
     args = parse_args()
     if not os.path.isdir(OUTPUT_DIR):
         import nltk
-        print('Loading russian stopwords for NLTK')
+        logging.info('Loading russian stopwords for NLTK')
         nltk.download("stopwords")
         os.mkdir(OUTPUT_DIR)
     if args.clear_output: #clean output contents
@@ -49,4 +48,5 @@ if __name__ == '__main__':
     attachments.attachments_data(db)
     attachments.polls_info(db, 20)
     text_parse.popular_words(db, 200)
+    # text_parse.get_themes(db)
     timing.drawplots(db)

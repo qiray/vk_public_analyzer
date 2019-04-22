@@ -7,7 +7,7 @@ import matplotlib.ticker as ticker
 import mpl_toolkits.axisartist as AA
 from mpl_toolkits.axes_grid1 import host_subplot
 
-from common_data import OUTPUT_DIR
+from common_data import logging, OUTPUT_DIR
 
 def get_element(data, index):
     result = int(index)
@@ -89,7 +89,7 @@ def datalist_to_dict(data, converter):
     return result
 
 def drawplots(db):
-    print('\nDrawing plots')
+    logging.info('Drawing plots')
     posts = db.get_posts_by_dates()
     #TODO: add total info?
     
@@ -120,4 +120,4 @@ def drawplots(db):
 
     hours_range = [str.format("%02d:00" % (i)) for i in range(24)]
     get_dateposts('hours.png', hours, hours_range, True)
-    print('Done')
+    logging.info('Done')
