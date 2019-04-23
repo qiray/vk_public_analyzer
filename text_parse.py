@@ -2,12 +2,15 @@
 import random
 import re
 import string
+import logging
 from collections import Counter
 
 from nltk.corpus import stopwords
+from stop_words import get_stop_words
 from pymystem3 import Mystem
 from wordcloud import WordCloud
 from gensim import corpora, models
+logging.getLogger("gensim").setLevel(logging.ERROR)
 
 import tabulate
 
@@ -17,6 +20,7 @@ def preprocess_text(text):
     '''Convert text to tokens list'''
     mystem = Mystem() #Create lemmatizer
     russian_stopwords = stopwords.words("russian") #init stopwords list
+    russian_stopwords.extend(get_stop_words('ru'))
     tokens = mystem.lemmatize(text.lower())
     tokens = [token for token in tokens if token not in russian_stopwords\
         and token != " " and token.strip() not in string.punctuation]
@@ -37,7 +41,7 @@ def word_data_to_text(word_data):
 
 def make_wordcloud(words, output_path):
     wordcloud = WordCloud(background_color="#FFFFFF", 
-        width=800, height=400).generate(words)
+        width=800, height=400).generate(words) #TODO: add stopwords
     image = wordcloud.to_image()
     image.save(output_path)
 
@@ -69,14 +73,22 @@ def popular_words(db, top_count):
     logging.info('Done')
 
 def get_themes(db):
-    #some material from https://github.com/Myonin/silentio.su/blob/master/topic_model_texts_lenta_ru.ipynb
-    alltext = db.select_all_text()
-    documents = [alltext.split(' ')] #TODO: tokenize and lemmatize text 
-    dictionary = corpora.Dictionary(documents)
-    corpus = [dictionary.doc2bow(text) for text in documents]
-    tfidf = models.TfidfModel(corpus)
-    corpus_tfidf = tfidf[corpus]
-    data = models.ldamodel.LdaModel(corpus_tfidf, id2word=dictionary,
-        num_topics=1,
-        passes=30, alpha=1.25, eta=1.25)
-    print(data)
+    # https://github.com/Myonin/silentio.su/blob/master/topic_model_texts_lenta_ru.ipynb
+    # https://github.com/susanli2016/Machine-Learning-with-Python/blob/master/topic_modeling_Gensim.ipynb
+    pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
+    alltext = db.select_all_text(2015) #TODO: process data by all years and maybe find more topics
+    words_data = preprocess_text(alltext)
+    words_data = [x for x in words_data if pattern.match(x)] #remove non-words
+    if len(words_data) == 0:
+        logging.warning("Empty dataset!")
+        return
+    text_data = [words_data]
+    dictionary = corpora.Dictionary(text_data)
+    corpus = [dictionary.doc2bow(text) for text in text_data]
+    # tfidf = models.TfidfModel(corpus)
+    # corpus_tfidf = tfidf[corpus]
+    data = models.ldamodel.LdaModel(corpus, id2word=dictionary,
+        num_topics=1, passes=30)
+    topics = data.print_topics(num_words=10)
+    for topic in topics:
+        print(topic)

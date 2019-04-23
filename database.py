@@ -39,9 +39,12 @@ class DataBase(object):
         conn.commit()
         conn.close()
 
-    def select_all_text(self):
+    def select_all_text(self, year=None):
         conn, cursor = self.start_connection()
         sql = "SELECT text FROM posts"
+        if year:
+            sql = "SELECT text FROM posts WHERE \
+                strftime('%%Y', datetime(date, 'unixepoch')) = '%s'" % year
         cursor.execute(sql)
         data = [x[0] for x in cursor.fetchall()]
         self.end_connecion(conn)

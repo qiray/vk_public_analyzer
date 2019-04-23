@@ -7,3 +7,4 @@ matplotlib
 tabulate
 argparse
 gensim
+stop_words
