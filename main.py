@@ -16,7 +16,6 @@ from common_data import *
 # TODOlist
 # word2vec
 # some more from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
-# Среднее просмотров-лайков-репостов за неделю/месяц/год/всегда
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 #TODO: create folder with public id
 
@@ -48,5 +47,5 @@ if __name__ == '__main__':
     attachments.attachments_data(db)
     attachments.polls_info(db, 20)
     text_parse.popular_words(db, 200)
-    # text_parse.get_themes(db)
+    text_parse.get_topics(db)
     timing.drawplots(db)

@@ -20,7 +20,7 @@ def common_data_row(data_values, value, name, count, csvfile):
 
 def common_data(db):
     data, names, columns = db.get_common_data()
-    f = open(OUTPUT_DIR + "common.csv","w")
+    f = open(OUTPUT_DIR + "common.csv","w", encoding="utf-8")
     headers = ['Parameter', 'Count', 'Average (Mean)', 'Median', 'Mode', 'Stdev']
     header = ";".join(headers)
     f.write(header + '\n')
@@ -46,7 +46,7 @@ def common_data(db):
 
 def top_data(name, max_values, min_values):
     '''Show top data'''
-    f = open(OUTPUT_DIR + "extremum_%s.csv" % (name),"w")
+    f = open(OUTPUT_DIR + "extremum_%s.csv" % (name),"w", encoding="utf-8")
     headers = ['Post id', 'Max', 'Author id', 'Post id', 'Min', 'Author id']
     if not min_values:
         headers = ['Post id', 'Max', 'Author id']
@@ -78,7 +78,7 @@ def alltop_data(db, top_count):
 def zero_data(db):
     names = ('Likes', 'Reposts', 'Comments', 'Attachments')
     columns = ('likes_count', 'reposts_count', 'comments_count', 'attachments_count')
-    f = open(OUTPUT_DIR + "zeroes.csv", "w")
+    f = open(OUTPUT_DIR + "zeroes.csv", "w", encoding="utf-8")
     headers = ['Parameter', 'Count']
     header = ";".join(headers)
     f.write(header + '\n')
@@ -96,7 +96,7 @@ def zero_data(db):
 
 def authors_data(db):
     data = db.get_posts_by_authors()
-    f = open(OUTPUT_DIR + "authors.csv","w")
+    f = open(OUTPUT_DIR + "authors.csv","w", encoding="utf-8")
     headers = ['Author id', 'Posts', 'Likes', 'Reposts', 'Comments', 
         'Views', 'Attachments', 'Text length']
     header = ";".join(headers)

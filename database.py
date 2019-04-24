@@ -143,3 +143,12 @@ class DataBase(object):
         result = cursor.fetchall()
         self.end_connecion(conn)
         return result
+
+    def get_posts_year_range(self):
+        conn, cursor = self.start_connection()
+        sql = "SELECT DISTINCT CAST(strftime('%Y', datetime(date, 'unixepoch')) AS INTEGER)\
+            FROM posts ORDER BY date"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        self.end_connecion(conn)
+        return [x[0] for x in result]

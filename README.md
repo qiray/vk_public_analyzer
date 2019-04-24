@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS attachments (
 - Find top words and hashtags;
 - Draw plots with posts, likes, reposts, comments, views, attachments and text length data;
 - Build word cloud;
+- Show LDA topics;
 - Make output images and csv-files.
 
 ## Thanks
