@@ -100,8 +100,8 @@ def get_topic_by_year(db, year=None):
     else:
         logging.info ("Common topics")
         f = open(OUTPUT_DIR + "topics.csv","w", encoding="utf-8")
+    f.write('Weight;Word\n')
     for topic in topics:
-        f.write('Weight;Word\n')
         topic_words = topic[1].split('+')
         for i in topic_words:
             result = i.replace(" ", "")

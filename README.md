@@ -1,37 +1,8 @@
 # vk_public_analyzer
 
-```sql
-CREATE TABLE IF NOT EXISTS posts (
-    id INTEGER,
-    from_id INTEGER,
-    owner_id INTEGER,
-    signer_id INTEGER,
-    date INTEGER,
-    marked_as_ads INTEGER,
-    post_type TEXT,
-    text TEXT,
-    is_pinned INTEGER,
-    comments_count INTEGER,
-    likes_count INTEGER,
-    reposts_count INTEGER,
-    views_count INTEGER,
-    attachments_count INTEGER,
-    PRIMARY KEY (id, from_id)
-);
+Project for analyzing vk posts saved by [vk_public_saver](https://github.com/qiray/vk_public_saver)
 
-CREATE TABLE IF NOT EXISTS attachments (
-    type TEXT,
-    id INTEGER,
-    owner_id INTEGER,
-    post_id INTEGER,
-    url TEXT,
-    additional_info text,
-    additional_info2 text,
-    PRIMARY KEY (id, type, post_id)
-);
-```
-
-## What we can
+## What it can
 
 - Show statistics about likes, reposts, views, comments, ads and attachments;
 - Show top posts - by likes, reposts, views, comments, attachments and text length;
@@ -46,16 +17,75 @@ CREATE TABLE IF NOT EXISTS attachments (
 - Show LDA topics;
 - Make output images and csv-files.
 
-## Thanks
+## Requirements
 
-- Yandex Mystem;
-- Some python libs.
+This tool uses Python 3 so you need to have Python 3 and pip for build and run it. To install them use instructions for your OS.
+
+It also needs extra libraries such as nltk, pymystem3, numpy, pillow, wordcloud, matplotlib, tabulate, argparse, gensim, stop_words. This program has file [requirements.txt](requirements.txt) with list of it's requirements. For install them call pip. For example:
+
+``` bash
+pip3 install -r requirements.txt --user
+```
+
+## Usage
+
+vk_public_analyzer is a console tool. To run it type:
+
+```bash
+python main.py
+#or
+python3 main.py
+```
+
+There are some extra modes:
+
+```
+usage: vk_public_analyzer [-h] [--path PATH] [--clear_output] [--about]
+
+Tool for analyzing publics' data from vk.com.
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --path PATH     Database path (default = data.db)
+  --clear_output  Clear output folder
+  --about         Show about info
+```
+
+After processing database this tool will create 'output' folder with all data - csv-files and png images. The tool will also print all text data to standard output.
+
+vk_public_analyzer uses sqlite databases saved by [vk_public_saver](https://github.com/qiray/vk_public_saver). Don't forget to get data for analysis before usage!
 
 ## How you can help
 
+If you like this project you can:
+
+- Tell your friends about it;
+- Star and fork this project on github - [https://github.com/qiray/vk_public_analyzer](https://github.com/qiray/vk_public_analyzer);
 - Contribute;
-- Star and repost on github - [https://github.com/qiray/vk_public_analyzer](https://github.com/qiray/vk_public_analyzer);
-- Tell your friends;
-- Write an article;
-- Use in your project;
+- Write an article about this project;
+- Use it in your own project;
 - Donate.
+
+## Credits
+
+This tool uses some apps and libs. I'd like to thank:
+
+- Yandex Mystem;
+- nltk;
+- pymystem3;
+- numpy;
+- pillow;
+- wordcloud;
+- matplotlib;
+- tabulate;
+- argparse;
+- gensim;
+- stop_words.
+
+## Contact
+
+You are welcome to open [new issue](https://github.com/qiray/vk_public_analyzer/issues/new) if you have any questions, suggestions or bugs.
+
+## License
+
+This program uses MIT license. For more information see the LICENSE file.

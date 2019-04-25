@@ -120,14 +120,6 @@ class DataBase(object):
         self.end_connecion(conn)
         return result
 
-    def get_posts_by_author(self, author_id): #TODO: use or remove
-        conn, cursor = self.start_connection()
-        cursor.execute("SELECT likes_count, reposts_count, comments_count, views_count,\
-            attachments_count, LENGTH(text) FROM posts WHERE signer_id = %s" % (author_id))
-        result = cursor.fetchall()
-        self.end_connecion(conn)
-        return result
-
     def get_polls(self):
         conn, cursor = self.start_connection()
         cursor.execute("SELECT * FROM attachments WHERE type = 'poll' ORDER BY \
