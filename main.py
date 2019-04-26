@@ -16,6 +16,7 @@ from common_data import *
 # word2vec - read from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 #TODO: create folder with public id
+#TODO: add examples
 
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1

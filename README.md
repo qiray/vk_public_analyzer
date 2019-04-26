@@ -68,19 +68,19 @@ If you like this project you can:
 
 ## Credits
 
-This tool uses some apps and libs. I'd like to thank:
+This tool uses some apps and package. I'd like to thank:
 
-- Yandex Mystem;
-- nltk;
-- pymystem3;
-- numpy;
-- pillow;
-- wordcloud;
-- matplotlib;
-- tabulate;
-- argparse;
-- gensim;
-- stop_words.
+- Yandex Mystem - tool for lemmatizing Russian texts;
+- nltk - toolkit for processing natural languages;
+- pymystem3 - Python wrapper for Yandex Mystem;
+- numpy - package for scientific computing;
+- pillow - Python Imaging Library;
+- wordcloud - package for making word clouds;
+- matplotlib - package for making plots;
+- tabulate - package for printing tables;
+- argparse - package for parsing command line args;
+- gensim - package for text models;
+- stop_words - package with list of stop words.
 
 ## Contact
 
