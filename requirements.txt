@@ -1,6 +1,6 @@
 nltk
 pymystem3
-numpy
+numpy<1.16
 pillow
 wordcloud
 matplotlib

@@ -8,13 +8,13 @@ Project for analyzing vk posts saved by [vk_public_saver](https://github.com/qir
 - Show top posts - by likes, reposts, views, comments, attachments and text length;
 - Show count of posts without texts, likes, reposts, comments and attachments;
 - Show count of each known attachment types;
-- Show polls data - polls' count, votes' count, average, median, mode and stdev;
+- Show polls data - polls' count, votes, average, median, mode and stdev;
 - Show top polls by votes;
 - Show authors info - count of posts, likes, reposts, comments, views, attachments and text length; 
 - Find top words and hashtags;
 - Draw plots with posts, likes, reposts, comments, views, attachments and text length data;
 - Build word cloud;
-- Show LDA topics;
+- Show topics with LDA model (Latent Dirichlet allocation);
 - Make output images and csv-files.
 
 ## Requirements

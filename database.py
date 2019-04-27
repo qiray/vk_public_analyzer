@@ -144,3 +144,11 @@ class DataBase(object):
         result = cursor.fetchall()
         self.end_connecion(conn)
         return [x[0] for x in result]
+
+    def get_public_id(self):
+        conn, cursor = self.start_connection()
+        sql = "SELECT from_id FROM posts LIMIT 1"
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        self.end_connecion(conn)
+        return result[0]

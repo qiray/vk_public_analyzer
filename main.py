@@ -16,7 +16,11 @@ from common_data import *
 # word2vec - read from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
 #TODO: create folder with public id
+#TODO: create subfolders for different data?
+#TODO: replace logging with custom print function
 #TODO: add examples
+#TODO: make package with pyinstaller
+#TODO: try-catch block
 
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1
@@ -56,6 +60,7 @@ if __name__ == '__main__':
             os.remove(f)
     dbpath = args.path if args.path else DB_PATH
     db = database.DataBase(dbpath)
+    # print (db.get_public_id()) #TODO: use for making output folder
     common.common_data(db)
     common.alltop_data(db, 10)
     common.zero_data(db)
