@@ -2,6 +2,8 @@
 
 import glob
 import os
+import sys
+import traceback
 
 import argparse
 
@@ -10,17 +12,16 @@ import common
 import database
 import text_parse
 import timing
-from common_data import *
+from common_info import get_output_path, set_output_path, print_info
+
+DB_PATH = "data.db"
 
 #TODO:
 # word2vec - read from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
 # Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
-#TODO: create folder with public id
-#TODO: create subfolders for different data?
-#TODO: replace logging with custom print function
 #TODO: add examples
+#TODO: write about output files in README
 #TODO: make package with pyinstaller
-#TODO: try-catch block
 
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1
@@ -45,28 +46,34 @@ def get_about_info():
         "This is free software under MIT license; see the LICENSE file for copying conditions.")
 
 if __name__ == '__main__':
-    args = parse_args()
-    if args.about:
-        print(get_about_info())
-        exit()
-    if not os.path.isdir(OUTPUT_DIR):
-        import nltk
-        logging.info('Loading russian stopwords for NLTK')
-        nltk.download("stopwords")
-        os.mkdir(OUTPUT_DIR)
-    if args.clear_output: #clean output contents
-        files = glob.glob('%s/*' % (OUTPUT_DIR))
-        for f in files:
-            os.remove(f)
-    dbpath = args.path if args.path else DB_PATH
-    db = database.DataBase(dbpath)
-    # print (db.get_public_id()) #TODO: use for making output folder
-    common.common_data(db)
-    common.alltop_data(db, 10)
-    common.zero_data(db)
-    common.authors_data(db)
-    attachments.attachments_data(db)
-    attachments.polls_info(db, 20)
-    text_parse.popular_words(db, 200)
-    text_parse.get_topics(db)
-    timing.drawplots(db)
+    try:
+        args = parse_args()
+        if args.about:
+            print(get_about_info())
+            exit()
+        dbpath = args.path if args.path else DB_PATH
+        db = database.DataBase(dbpath)
+        public_id = db.get_public_id()
+        set_output_path('%s/%s/' % (get_output_path(), public_id))
+        if not os.path.isdir(get_output_path()):
+            import nltk
+            print_info('Loading russian stopwords for NLTK')
+            nltk.download("stopwords")
+            os.mkdir(get_output_path())
+        if args.clear_output: #clean output contents
+            files = glob.glob('%s/*' % (get_output_path()))
+            for f in files:
+                os.remove(f)
+        common.common_data(db)
+        common.alltop_data(db, 10)
+        common.zero_data(db)
+        common.authors_data(db)
+        attachments.attachments_data(db)
+        attachments.polls_info(db, 20)
+        text_parse.popular_words(db, 200)
+        text_parse.get_topics(db)
+        timing.drawplots(db)
+    except BaseException as e:
+        print(e)
+        traceback.print_exc()
+        exit(1)

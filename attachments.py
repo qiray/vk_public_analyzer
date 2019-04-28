@@ -3,11 +3,11 @@ from collections import Counter
 
 import tabulate
 
-from common_data import OUTPUT_DIR
+from common_info import get_output_path
 
 def attachments_data(db):
     data = db.get_attachments_types()
-    f = open(OUTPUT_DIR + "attachments.csv","w", encoding="utf-8")
+    f = open(get_output_path() + "attachments.csv","w", encoding="utf-8")
     headers = ['Parameter', 'Count']
     header = ";".join(headers)
     f.write(header + '\n')
@@ -36,7 +36,7 @@ def polls_info(db, count):
         statistics.stdev(votes)]
     print("\nPolls data:")
     print(tabulate.tabulate([values], headers=headers, floatfmt=".4g", numalign="right"))
-    f = open(OUTPUT_DIR + "common_polls.csv","w", encoding="utf-8")
+    f = open(get_output_path() + "common_polls.csv","w", encoding="utf-8")
     f.write(";".join(headers) + '\n')
     f.write('%s;%d;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2],
             values[3], values[4], values[5], values[6]))
@@ -44,7 +44,7 @@ def polls_info(db, count):
     print("\nTop polls:")
     headers = ['URL', 'Votes']
     table_values = []
-    f = open(OUTPUT_DIR + "polls.csv","w", encoding="utf-8")
+    f = open(get_output_path() + "polls.csv","w", encoding="utf-8")
     f.write(";".join(headers) + '\n')
     for i, _ in enumerate(polls):
         values = [polls[i][4], polls[i][6]]

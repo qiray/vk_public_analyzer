@@ -1,10 +1,13 @@
 
+import os
 import sqlite3
 
 class DataBase(object):
     """Class for working with database"""
 
     def __init__(self, dbpath):
+        if not os.path.isfile(dbpath):
+            raise FileNotFoundError(dbpath)
         self.dbpath = dbpath
         self.names = ('Posts', 'Likes', 'Reposts', 'Comments', 'Views', 'Ads', 'Attachments')
         self.columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 
