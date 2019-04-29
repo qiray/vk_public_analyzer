@@ -39,6 +39,9 @@ def word_data_to_text(word_data):
     return ' '.join(result)
 
 def make_wordcloud(words, output_path):
+    if len(words) == 0:
+        print_info("Warning! No data for wordcloud")
+        return
     wordcloud = WordCloud(background_color="#FFFFFF",
         width=800, height=400, stopwords=['это']).generate(words)
     image = wordcloud.to_image()

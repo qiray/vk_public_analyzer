@@ -1,6 +1,7 @@
 
 import calendar
 import datetime
+import time
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -91,16 +92,22 @@ def datalist_to_dict(data, converter):
 def drawplots(db):
     print_info('Drawing plots')
     posts = db.get_posts_by_dates()
-    #TODO: add total info?
     
     years = datalist_to_dict(posts, lambda x: datetime.datetime.fromtimestamp(x[0]).strftime('%Y'))
     months = datalist_to_dict(posts, lambda x: datetime.datetime.fromtimestamp(x[0]).strftime('%B'))
     weekdays = datalist_to_dict(posts, lambda x: datetime.datetime.fromtimestamp(x[0]).strftime('%a'))
-    dates = datalist_to_dict(posts, lambda x: datetime.datetime.fromtimestamp(x[0]).strftime('%Y-%m'))
+    dates = datalist_to_dict(posts, lambda x: get_quarter_date(x[0]))
     hours = datalist_to_dict(posts, lambda x: datetime.datetime.fromtimestamp(x[0]).strftime('%H:00'))
 
     years_list = sorted(years.keys())
     get_dateposts('years.png', years, years_list)
+
+    d1 = quarter_date_to_date(min(dates))
+    d2 = quarter_date_to_date(max(dates))
+    delta = d2 - d1
+    alldates = [get_quarter_date(time.mktime((d1 + datetime.timedelta(i)).timetuple())) for i in range(delta.days)]
+    alldates = sorted(list(set(alldates))) #remove duplicates
+    get_dateposts('quarters.png', dates, alldates, autolocator=True)
 
     sorter = [calendar.month_name[i + 1] for i in range(12)]
     sorterIndex = dict(zip(sorter, range(len(sorter))))
@@ -112,12 +119,18 @@ def drawplots(db):
     weekdays_names = sorted(weekdays.keys(), key=lambda day: sorterIndex[day])
     get_dateposts('weekdays.png', weekdays, weekdays_names)
 
-    d1 = datetime.datetime.strptime(min(dates), "%Y-%m").date()
-    d2 = datetime.datetime.strptime(max(dates), "%Y-%m").date()
-    delta = d2 - d1
-    alldates = [(d1 + datetime.timedelta(i)).strftime('%Y-%m') for i in range(delta.days + 1)]
-    get_dateposts('allmonths.png', dates, alldates, autolocator=True)
-
     hours_range = [str.format("%02d:00" % (i)) for i in range(24)]
     get_dateposts('hours.png', hours, hours_range, True)
     print_info('Done')
+
+def get_quarter_date(timestamp):
+    date = datetime.datetime.fromtimestamp(timestamp)
+    year = date.strftime('%Y')
+    month = int(date.strftime('%m'))
+    quarter = (month - 1)//3 + 1
+    return "%s-%d" % (year, quarter)
+
+def quarter_date_to_date(quarter_date):
+    values = quarter_date.split('-')
+    date = "%s-%d" % (values[0], 3*int(values[1]) + 1)
+    return datetime.datetime.strptime(date, "%Y-%m").date()

@@ -6,6 +6,7 @@ import sys
 import traceback
 
 import argparse
+import nltk
 
 import attachments
 import common
@@ -18,10 +19,8 @@ DB_PATH = "data.db"
 
 #TODO:
 # word2vec - read from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
-# Проанализировать Вестник, Агрепаблик, Суртех, Хм., Мюсли, еще что-нибудь
-#TODO: add examples
+#TODO: add example - article?
 #TODO: write about output files in README
-#TODO: make package with pyinstaller
 
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1
@@ -51,15 +50,16 @@ if __name__ == '__main__':
         if args.about:
             print(get_about_info())
             exit()
+        try:
+            nltk.data.find('corpora/stopwords')
+        except LookupError:
+            nltk.download('stopwords')
         dbpath = args.path if args.path else DB_PATH
         db = database.DataBase(dbpath)
         public_id = db.get_public_id()
         set_output_path('%s/%s/' % (get_output_path(), public_id))
         if not os.path.isdir(get_output_path()):
-            import nltk
-            print_info('Loading russian stopwords for NLTK')
-            nltk.download("stopwords")
-            os.mkdir(get_output_path())
+            os.makedirs(get_output_path())
         if args.clear_output: #clean output contents
             files = glob.glob('%s/*' % (get_output_path()))
             for f in files:

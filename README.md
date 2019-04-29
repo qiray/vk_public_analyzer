@@ -29,6 +29,8 @@ pip3 install -r requirements.txt --user
 
 ## Usage
 
+vk_public_analyzer uses sqlite databases saved by [vk_public_saver](https://github.com/qiray/vk_public_saver). Don't forget to get data for analysis before usage!
+
 vk_public_analyzer is a console tool. To run it type:
 
 ```bash
@@ -53,7 +55,24 @@ optional arguments:
 
 After processing database this tool will create 'output' folder with all data - csv-files and png images. The tool will also print all text data to standard output.
 
-vk_public_analyzer uses sqlite databases saved by [vk_public_saver](https://github.com/qiray/vk_public_saver). Don't forget to get data for analysis before usage!
+<!-- TODO: write about these files The output folder contains these files:
+
+- common.csv
+- extremum_%s.csv
+- zeroes.csv
+- authors.csv
+
+- attachments.csv
+- common_polls.csv, polls.csv
+
+- top_words.csv
+- allwords.png, topwords.png, hashtags.png
+- topics_%Y.csv, topics.csv
+
+- years.png, months.png, weekdays.png, quarters.png, hours.png 
+
+So now you have a lot of interesting data to interpret it :-)
+-->
 
 ## How you can help
 
