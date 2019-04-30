@@ -9,8 +9,8 @@ Project for analyzing vk posts saved by [vk_public_saver](https://github.com/qir
 - Show count of posts without texts, likes, reposts, comments and attachments;
 - Show count of each known attachment types;
 - Show polls data - polls' count, votes, average, median, mode and stdev;
-- Show top polls by votes;
-- Show authors info - count of posts, likes, reposts, comments, views, attachments and text length; 
+- Show top polls sorted by votes;
+- Show authors info - count of posts, likes, reposts, comments, views, attachments and text length;
 - Find top words and hashtags;
 - Draw plots with posts, likes, reposts, comments, views, attachments and text length data;
 - Build word cloud;
@@ -53,26 +53,26 @@ optional arguments:
   --about         Show about info
 ```
 
-After processing database this tool will create 'output' folder with all data - csv-files and png images. The tool will also print all text data to standard output.
+After processing database this tool will create 'output/PUBLIC_ID' folder with all data - csv-files and png images. The tool will also print all text data to standard output.
 
-<!-- TODO: write about these files The output folder contains these files:
+The output folder contains these files:
 
-- common.csv
-- extremum_%s.csv
-- zeroes.csv
-- authors.csv
+- **common.csv** - statistics about likes, reposts, views, comments, ads and attachments:
+- **extremum_*.csv** - top posts by likes, reposts, views, comments, attachments and text length:
+- **zeroes.csv** - count of posts without texts, likes, reposts, comments and attachments;
+- **authors.csv** - authors statistics - count of posts, likes, reposts, comments, views, attachments and text length:
 
-- attachments.csv
-- common_polls.csv, polls.csv
+- **attachments.csv** - count of each known attachment types;
+- **common_polls.csv** - polls' count, votes, average, median, mode and stdev;
+- **polls.csv** - polls sorted by votes;
 
-- top_words.csv
-- allwords.png, topwords.png, hashtags.png
-- topics_%Y.csv, topics.csv
+- **top_words.csv** - top words;
+- **allwords.png, topwords.png, hashtags.png** - word clouds with all words, top words and hashtags;
+- **topics_*.csv, topics.csv** - topics made with LDA model;
 
-- years.png, months.png, weekdays.png, quarters.png, hours.png 
+- **years.png, months.png, weekdays.png, quarters.png, hours.png** - plots with posts, likes, reposts, comments, views, attachments and text length data.
 
 So now you have a lot of interesting data to interpret it :-)
--->
 
 ## How you can help
 

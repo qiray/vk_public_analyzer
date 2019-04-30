@@ -17,6 +17,11 @@ from common_info import print_info, get_output_path
 russian_stopwords = stopwords.words("russian") #init stopwords list
 russian_stopwords.extend(get_stop_words('ru')) #update stopwords list
 
+# Some useful URLs
+# https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
+# https://github.com/Myonin/silentio.su/blob/master/topic_model_texts_lenta_ru.ipynb
+# https://github.com/susanli2016/Machine-Learning-with-Python/blob/master/topic_modeling_Gensim.ipynb
+
 def preprocess_text(text):
     '''Convert text to tokens list'''
     mystem = Mystem() #Create lemmatizer
@@ -75,8 +80,6 @@ def popular_words(db, top_count):
     print_info('Done')
 
 def get_topics(db):
-    # https://github.com/Myonin/silentio.su/blob/master/topic_model_texts_lenta_ru.ipynb
-    # https://github.com/susanli2016/Machine-Learning-with-Python/blob/master/topic_modeling_Gensim.ipynb
     for i in db.get_posts_year_range():
         get_topic_by_year(db, i)
     get_topic_by_year(db)

@@ -132,5 +132,5 @@ def get_quarter_date(timestamp):
 
 def quarter_date_to_date(quarter_date):
     values = quarter_date.split('-')
-    date = "%s-%d" % (values[0], 3*int(values[1]) + 1)
+    date = "%s-%d" % (values[0], 3*(int(values[1]) - 1) + 1)
     return datetime.datetime.strptime(date, "%Y-%m").date()

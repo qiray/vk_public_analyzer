@@ -17,10 +17,7 @@ from common_info import get_output_path, set_output_path, print_info
 
 DB_PATH = "data.db"
 
-#TODO:
-# word2vec - read from https://habr.com/ru/post/429270/ and https://github.com/Myonin/silentio.su
-#TODO: add example - article?
-#TODO: write about output files in README
+#TODO: add example article
 
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1
