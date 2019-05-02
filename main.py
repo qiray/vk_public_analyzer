@@ -8,6 +8,11 @@ import traceback
 import argparse
 import nltk
 
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
+
 import attachments
 import common
 import database
@@ -47,10 +52,6 @@ if __name__ == '__main__':
         if args.about:
             print(get_about_info())
             exit()
-        try:
-            nltk.data.find('corpora/stopwords')
-        except LookupError:
-            nltk.download('stopwords')
         dbpath = args.path if args.path else DB_PATH
         db = database.DataBase(dbpath)
         public_id = db.get_public_id()
