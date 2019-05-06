@@ -74,6 +74,10 @@ The output folder contains these files:
 
 So now you have a lot of interesting data to interpret it :-)
 
+## Example
+
+Here you can read [example of data interpretation](examples/BrutalEngineer.md) (in Russian).
+
 ## How you can help
 
 If you like this project you can:
