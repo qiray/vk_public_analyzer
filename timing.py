@@ -18,11 +18,13 @@ def get_element(data, index):
         return data[-1]
     return data[result]
 
-def draw_subplot(host, fixed_axis, x_range, y, offset, label):
+def draw_subplot(host, fixed_axis, x_range, y, offset, label, marker='o'):
     par = host.twinx()
     par.axis["right"] = fixed_axis(loc="right", axes=par, offset=(offset, 0))
     par.set_ylabel(label)
-    p, = par.plot(x_range, y, marker='o', label=label)
+    par.get_yaxis().set_major_formatter(
+        ticker.FuncFormatter(lambda x, p: format(int(x)))) #TODO: fix for large numbers
+    p, = par.plot(x_range, y, marker=marker, label=label)
     par.axis["right"].label.set_color(p.get_color())
 
 def get_dateposts(name, data, data_range, autolocator=False):
@@ -37,6 +39,7 @@ def get_dateposts(name, data, data_range, autolocator=False):
 
     host = host_subplot(111, axes_class=AA.Axes)
     plt.subplots_adjust(right=0.65, bottom=0.15, left=0.05)
+    plt.ticklabel_format(useOffset=False)
     new_fixed_axis = host.get_grid_helper().new_fixed_axis
 
     plt.xticks([])
@@ -53,12 +56,12 @@ def get_dateposts(name, data, data_range, autolocator=False):
     p1, = host.plot(x_range, y1, marker='o', label='posts')
     host.axis["left"].label.set_color(p1.get_color())
 
-    draw_subplot(host, new_fixed_axis, x_range, y2, 0, 'likes')
-    draw_subplot(host, new_fixed_axis, x_range, y3, 60, 'reposts')
-    draw_subplot(host, new_fixed_axis, x_range, y4, 120, 'comments')
-    draw_subplot(host, new_fixed_axis, x_range, y5, 180, 'views')
-    draw_subplot(host, new_fixed_axis, x_range, y6, 240, 'attachments')
-    draw_subplot(host, new_fixed_axis, x_range, y7, 300, 'text length')
+    draw_subplot(host, new_fixed_axis, x_range, y2, 0, 'likes', '^')
+    draw_subplot(host, new_fixed_axis, x_range, y3, 60, 'reposts', 'D')
+    draw_subplot(host, new_fixed_axis, x_range, y4, 120, 'comments', 'v')
+    draw_subplot(host, new_fixed_axis, x_range, y5, 180, 'views', '.')
+    draw_subplot(host, new_fixed_axis, x_range, y6, 240, 'attachments', 's')
+    draw_subplot(host, new_fixed_axis, x_range, y7, 300, 'text length', 'X')
 
     host.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
         fancybox=True, shadow=True, ncol=7)
