@@ -22,8 +22,8 @@ def draw_subplot(host, fixed_axis, x_range, y, offset, label, marker='o'):
     par = host.twinx()
     par.axis["right"] = fixed_axis(loc="right", axes=par, offset=(offset, 0))
     par.set_ylabel(label)
-    par.get_yaxis().set_major_formatter(
-        ticker.FuncFormatter(lambda x, p: format(int(x)))) #TODO: fix for large numbers
+    par.get_yaxis().set_major_formatter(ticker.FuncFormatter(
+        lambda x, p: str(int(x)) if max(y) < 1e6 else '{:.2e}'.format(float(x))))
     p, = par.plot(x_range, y, marker=marker, label=label)
     par.axis["right"].label.set_color(p.get_color())
 
