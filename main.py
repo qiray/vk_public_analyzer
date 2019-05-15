@@ -22,8 +22,6 @@ from common_info import get_output_path, set_output_path, print_info
 
 DB_PATH = "data.db"
 
-#TODO: add example article
-
 APP_NAME = "vk_public_analyzer"
 VERSION_MAJOR = 1
 VERSION_MINOR = 0
