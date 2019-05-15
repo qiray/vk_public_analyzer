@@ -23,19 +23,19 @@ def draw_subplot(host, fixed_axis, x_range, y, offset, label, marker='o'):
     par.axis["right"] = fixed_axis(loc="right", axes=par, offset=(offset, 0))
     par.set_ylabel(label)
     par.get_yaxis().set_major_formatter(ticker.FuncFormatter(
-        lambda x, p: str(int(x)) if max(y) < 1e6 else '{:.2e}'.format(float(x))))
+        lambda x, p: str.format("%g" % x) if max(y) < 1e6 else '{:.2e}'.format(float(x))))
     p, = par.plot(x_range, y, marker=marker, label=label)
     par.axis["right"].label.set_color(p.get_color())
 
 def get_dateposts(name, data, data_range, autolocator=False):
     x = data_range
     y1 = [posts_count(data, str(i)) for i in x] #posts
-    y2 = [get_count(data, str(i), 1) for i in x] #likes
-    y3 = [get_count(data, str(i), 2) for i in x] #reposts
-    y4 = [get_count(data, str(i), 3) for i in x] #comments
-    y5 = [get_count(data, str(i), 4) for i in x] #views
-    y6 = [get_count(data, str(i), 5) for i in x] #attachments
-    y7 = [get_count(data, str(i), 6) for i in x] #text length
+    y2 = [get_average(data, str(i), 1) for i in x] #likes
+    y3 = [get_average(data, str(i), 2) for i in x] #reposts
+    y4 = [get_average(data, str(i), 3) for i in x] #comments
+    y5 = [get_average(data, str(i), 4) for i in x] #views
+    y6 = [get_average(data, str(i), 5) for i in x] #attachments
+    y7 = [get_average(data, str(i), 6) for i in x] #text length
 
     host = host_subplot(111, axes_class=AA.Axes)
     plt.subplots_adjust(right=0.65, bottom=0.15, left=0.05)
@@ -77,9 +77,9 @@ def posts_count(data, value):
         return len(data[value])
     return 0
 
-def get_count(data, value, index):
+def get_average(data, value, index):
     if value in data:
-        return sum([x[index] for x in data[value]])
+        return sum([x[index] for x in data[value]])/len(data[value])
     return 0
 
 def datalist_to_dict(data, converter):
