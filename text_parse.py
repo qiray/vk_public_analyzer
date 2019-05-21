@@ -85,6 +85,7 @@ def get_topics(db):
     get_topic_by_year(db)
 
 def get_topic_by_year(db, year=None):
+    # TODO: convert text to horizontal bars
     pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
     alltext = db.select_all_text(year)
     words_data = preprocess_text(alltext)

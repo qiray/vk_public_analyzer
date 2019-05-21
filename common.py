@@ -13,7 +13,7 @@ def common_data_row(data_values, value, name, count, csvfile):
         c = Counter(data_values)
         mode = c.most_common(1)[0][0]
     values = [name, value, value/count, statistics.median(data_values), mode,
-        statistics.stdev(data_values)]
+        statistics.pstdev(data_values)]
     csvfile.write('%s;%d;%.4g;%.4g;%.4g;%.4g\n' % (values[0], values[1], values[2], values[3],
         values[4], values[5]))
     return values
@@ -44,25 +44,17 @@ def common_data(db):
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, floatfmt=".4g", numalign="right"))
 
-def top_data(name, max_values, min_values):
+def top_data(name, max_values):
     '''Show top data'''
     f = open(get_output_path() + "extremum_%s.csv" % (name),"w", encoding="utf-8")
-    headers = ['Post id', 'Max', 'Author id', 'Post id', 'Min', 'Author id']
-    if not min_values:
-        headers = ['Post id', 'Max', 'Author id']
+    headers = ['Post id', 'Max']
     header = ";".join(headers)
     f.write(header + '\n')
     print("\n%s extremum data:" % (name))
     table_values = []
     for i in range(len(max_values)):
-        if min_values:
-            values = [max_values[i][1], max_values[i][0], max_values[i][2],
-                min_values[i][1], min_values[i][0], min_values[i][2]]
-            f.write('%d;%d;%d;%d;%d;%d\n' % (values[0], values[1], values[2],
-                values[3], values[4], values[5]))
-        else:
-            values = [max_values[i][1], max_values[i][0], max_values[i][2]]
-            f.write('%d;%d;%d\n' % (values[0], values[1], values[2]))
+        values = [max_values[i][1], max_values[i][0]]
+        f.write('%d;%d\n' % (values[0], values[1]))
         table_values.append(values)
     f.close()
     print(tabulate.tabulate(table_values, headers=headers, numalign="right"))
@@ -72,8 +64,8 @@ def alltop_data(db, top_count):
     columns = ('likes_count', 'reposts_count', 'comments_count', 'views_count', 
         'attachments_count')
     for i in range(len(names)):
-        top_data(names[i], db.get_top_data(columns[i], top_count), None)
-    top_data('Text', db.get_top_texts(top_count), None)
+        top_data(names[i], db.get_top_data(columns[i], top_count))
+    top_data('Text', db.get_top_texts(top_count))
 
 def zero_data(db):
     names = ('Likes', 'Reposts', 'Comments', 'Attachments')

@@ -33,7 +33,7 @@ def polls_info(db, count):
         mode = c.most_common(1)[0][0]
     headers = ['Parameter', 'Count', 'Total votes', 'Average (Mean)', 'Median', 'Mode', 'Stdev']
     values = ['Polls', length, total_votes, average, statistics.median(votes), mode, 
-        statistics.stdev(votes)]
+        statistics.pstdev(votes)]
     print("\nPolls data:")
     print(tabulate.tabulate([values], headers=headers, floatfmt=".4g", numalign="right"))
     f = open(get_output_path() + "common_polls.csv","w", encoding="utf-8")

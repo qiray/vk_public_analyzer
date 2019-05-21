@@ -56,12 +56,12 @@ def get_dateposts(name, data, data_range, autolocator=False):
     p1, = host.plot(x_range, y1, marker='o', label='posts')
     host.axis["left"].label.set_color(p1.get_color())
 
-    draw_subplot(host, new_fixed_axis, x_range, y2, 0, 'likes', '^')
-    draw_subplot(host, new_fixed_axis, x_range, y3, 60, 'reposts', 'D')
-    draw_subplot(host, new_fixed_axis, x_range, y4, 120, 'comments', 'v')
-    draw_subplot(host, new_fixed_axis, x_range, y5, 180, 'views', '.')
-    draw_subplot(host, new_fixed_axis, x_range, y6, 240, 'attachments', 's')
-    draw_subplot(host, new_fixed_axis, x_range, y7, 300, 'text length', 'X')
+    draw_subplot(host, new_fixed_axis, x_range, y2, 0, 'likes / post', '^')
+    draw_subplot(host, new_fixed_axis, x_range, y3, 60, 'reposts / post', 'D')
+    draw_subplot(host, new_fixed_axis, x_range, y4, 120, 'comments / post', 'v')
+    draw_subplot(host, new_fixed_axis, x_range, y5, 180, 'views / post', '.')
+    draw_subplot(host, new_fixed_axis, x_range, y6, 240, 'attachments / post', 's')
+    draw_subplot(host, new_fixed_axis, x_range, y7, 300, 'text length / post', 'X')
 
     host.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
         fancybox=True, shadow=True, ncol=7)
