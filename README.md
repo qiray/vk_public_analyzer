@@ -69,6 +69,7 @@ The output folder contains these files:
 - **top_words.csv** - top words;
 - **allwords.png, topwords.png, hashtags.png** - word clouds with all words, top words and hashtags;
 - **topics_*.csv, topics.csv** - topics made with LDA model;
+- **topics_*.png, topics.png** - plot with topics made with LDA model;
 
 - **years.png, months.png, weekdays.png, quarters.png, hours.png** - plots with posts, likes, reposts, comments, views, attachments and text length data.
 

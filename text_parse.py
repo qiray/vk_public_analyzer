@@ -4,13 +4,13 @@ import re
 import string
 from collections import Counter
 
+import tabulate
+import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from stop_words import get_stop_words
 from pymystem3 import Mystem
 from wordcloud import WordCloud
 from gensim import corpora, models
-
-import tabulate
 
 from common_info import print_info, get_output_path
 
@@ -84,8 +84,23 @@ def get_topics(db):
         get_topic_by_year(db, i)
     get_topic_by_year(db)
 
+def topics_plot(topic_names, topic_data, name):
+    plt.rcdefaults()
+    _, ax = plt.subplots()
+    plt.subplots_adjust(right=0.9, left=0.2)
+
+    y_pos = [i for i in range(len(topic_names))]
+    ax.barh(y_pos, topic_data, align='center')
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(topic_names)
+    ax.invert_yaxis()
+    ax.set_xlabel('Weight')
+    ax.set_title('Topics')
+
+    plt.savefig(name)
+    plt.close()
+
 def get_topic_by_year(db, year=None):
-    # TODO: convert text to horizontal bars
     pattern = re.compile("^[a-zA-Zа-яА-Я0-9_]+$")
     alltext = db.select_all_text(year)
     words_data = preprocess_text(alltext)
@@ -101,17 +116,23 @@ def get_topic_by_year(db, year=None):
     topics = data.print_topics(num_words=10)
     if year:
         print_info("Topics for %d" % year)
-        f = open(get_output_path() + "topics_%d.csv" % year,"w", encoding="utf-8")
+        name = get_output_path() + "topics_%d" % year
     else:
         print_info("Common topics")
-        f = open(get_output_path() + "topics.csv","w", encoding="utf-8")
+        name = get_output_path() + "topics"
+    f = open(name + ".csv", "w", encoding="utf-8")
     f.write('Weight;Word\n')
+    topic_names = []
+    topic_data = []
     for topic in topics:
         topic_words = topic[1].split('+')
         for i in topic_words:
             result = i.replace(" ", "")
             result = result.replace("\"", "")
             values = result.split('*')
-            f.write('%s;%s\n' %(values[0], values[1]))
+            topic_data.append(float(values[0]))
+            topic_names.append(values[1])
+            f.write('%s;%s\n' % (values[0], values[1]))
         print(topic[1])
     f.close()
+    topics_plot(topic_names, topic_data, name + ".png")
