@@ -106,7 +106,7 @@ def drawplots(db):
     get_dateposts('years.png', years, years_list)
 
     d1 = quarter_date_to_date(min(dates))
-    d2 = quarter_date_to_date(max(dates))
+    d2 = quarter_date_to_date(max(dates), end=True)
     delta = d2 - d1
     alldates = [get_quarter_date(time.mktime((d1 + datetime.timedelta(i)).timetuple())) for i in range(delta.days)]
     alldates = sorted(list(set(alldates))) #remove duplicates
@@ -133,7 +133,10 @@ def get_quarter_date(timestamp):
     quarter = (month - 1)//3 + 1
     return "%s-%d" % (year, quarter)
 
-def quarter_date_to_date(quarter_date):
+def quarter_date_to_date(quarter_date, end=False):
     values = quarter_date.split('-')
-    date = "%s-%d" % (values[0], 3*(int(values[1]) - 1) + 1)
+    month = 3*(int(values[1]) - 1) + 1
+    if end:
+        month += 2
+    date = "%s-%d" % (values[0], month)
     return datetime.datetime.strptime(date, "%Y-%m").date()
