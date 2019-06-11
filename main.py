@@ -2,7 +2,6 @@
 
 import glob
 import os
-import sys
 import traceback
 
 import argparse

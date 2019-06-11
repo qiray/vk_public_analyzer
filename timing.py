@@ -2,6 +2,7 @@
 import calendar
 import datetime
 import time
+import locale
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -93,6 +94,7 @@ def datalist_to_dict(data, converter):
     return result
 
 def drawplots(db):
+    locale.setlocale(locale.LC_ALL, "en_US")
     print_info('Drawing plots')
     posts = db.get_posts_by_dates()
     
@@ -112,6 +114,7 @@ def drawplots(db):
     alldates = sorted(list(set(alldates))) #remove duplicates
     get_dateposts('quarters.png', dates, alldates, autolocator=True)
 
+    locale.setlocale(locale.LC_ALL, "en_US") #if we delete this line the following code will fail in Python 3.7.3
     sorter = [calendar.month_name[i + 1] for i in range(12)]
     sorterIndex = dict(zip(sorter, range(len(sorter))))
     month_names = sorted(months.keys(), key=lambda m: sorterIndex[m])
