@@ -41,14 +41,14 @@ def get_version():
 def get_about_info():
     return ("\n" + APP_NAME + " " + get_version() + " Copyright (C) 2019 Yaroslav Zotov.\n" +
         "This program comes with ABSOLUTELY NO WARRANTY.\n" +
-        "This is free software under MIT license; see the LICENSE file for copying conditions.")
+        "This is free software under MIT license; see the LICENSE file for copying conditions.\n")
 
-if __name__ == '__main__':
+def main():
     try:
         args = parse_args()
         if args.about:
             print(get_about_info())
-            exit()
+            return
         dbpath = args.path if args.path else DB_PATH
         db = database.DataBase(dbpath)
         public_id = db.get_public_id()
@@ -72,3 +72,7 @@ if __name__ == '__main__':
         print(e)
         traceback.print_exc()
         exit(1)
+
+
+if __name__ == '__main__':
+    main()
