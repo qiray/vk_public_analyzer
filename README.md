@@ -60,7 +60,7 @@ The output folder contains these files:
 - **common.csv** - statistics about likes, reposts, views, comments, ads and attachments:
 - **extremum_*.csv** - top posts by likes, reposts, views, comments, attachments and text length:
 - **zeroes.csv** - count of posts without texts, likes, reposts, comments and attachments;
-- **authors.csv** - authors statistics - count of posts, likes, reposts, comments, views, attachments and text length:
+- **authors.csv** - authors statistics - count of posts, likes, reposts, comments, views, attachments and text length;
 
 - **attachments.csv** - count of each known attachment types;
 - **common_polls.csv** - polls' count, votes, average, median, mode and stdev;
@@ -94,7 +94,7 @@ If you like this project you can:
 
 ## Credits
 
-This tool uses some apps and package. I'd like to thank:
+This tool uses some apps and packages. I'd like to thank:
 
 - Yandex Mystem - tool for lemmatizing Russian texts;
 - nltk - toolkit for processing natural languages;
